@@ -9,6 +9,9 @@
     "start": "npm run webpack -- --watch",
     "webpack": "node_modules/.bin/webpack --config ./react/webpack.config.js"
   },
+  "engines": {
+    "node": ">=4.0"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {

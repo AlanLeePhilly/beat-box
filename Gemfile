@@ -11,6 +11,7 @@ gem "haml-rails"
 gem "jbuilder"
 gem 'jquery-rails'
 gem "sdoc", "~> 0.4.0", group: :doc
+gem "turbolinks"
 group :development do
   gem 'listen', '~> 3.0.5'
   gem "web-console"
@@ -38,6 +39,7 @@ group :test do
   gem "shoulda-matchers"
   gem "vcr"
   gem "webmock"
+  gem 'coveralls', require: false
 end
 
 group :production do
