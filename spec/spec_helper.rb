@@ -12,6 +12,20 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
+require 'coveralls'
+Coveralls.wear!('rails')
+require File.expand_path('../../config/environment', __FILE__)
+require 'rspec/rails'
+require 'capybara/rspec'
+
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+SimpleCov.start do
+  add_filter 'app/channels'
+  add_filter 'app/helpers'
+  add_filter 'app/jobs'
+  add_filter 'app/mailers'
+end
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
