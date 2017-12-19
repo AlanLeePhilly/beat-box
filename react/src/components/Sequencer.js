@@ -52,9 +52,13 @@ var getNotes = function(rootNote, octave, scale) {
   noteArr[1] = indArr.map(val => { return Object.values(NOTES)[val] })
   return noteArr
   }
+var AC = window.AudioContext
+|| window.webkitAudioContext // Safari and old versions of Chrome
+|| false;
 
-
+if (AC) {
 var synth = new Synth();
+}
 
 class Sequencer extends Component {
 

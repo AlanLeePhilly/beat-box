@@ -2,6 +2,11 @@ var path = require('path');
 
 module.exports = function(config) {
   config.set({
+    exclude: [
+      // './src/components/Synth.js',
+      './src/components/Sequencer.js'
+
+    ],
     // use the PhantomJS browser
     browsers: ['PhantomJS'],
 
@@ -17,6 +22,7 @@ module.exports = function(config) {
 
       '../node_modules/whatwg-fetch/fetch.js'
     ],
+
 
     // before serving test/testHelper.js to the browser
     preprocessors: {
