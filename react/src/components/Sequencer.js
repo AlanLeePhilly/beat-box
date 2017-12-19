@@ -106,7 +106,6 @@ this.setNotes = this.setNotes.bind(this)
   }
 
   changeBPM(bpm) {
-
     if (bpm > 300 || bpm < 60) return;
 
     this.setState({
