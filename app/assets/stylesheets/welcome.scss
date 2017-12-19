@@ -1,3 +1,155 @@
 // Place all the styles related to the welcome controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@import url('https://fonts.googleapis.com/css?family=Allan');
+
+$dark: lighten(#121214, 50%);
+$steps: 10;
+$primary: #F0371A;
+$controller_size: 600px;
+$radius: 0px;
+
+body {
+  // background: $dark;
+  background-color: black;
+  font-family: 'Helvetica Neue';
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-top: 1em;
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+}
+
+h1 {
+  margin-top: 0;
+  color: $primary;
+  opacity: 0.5;
+  font-weight: lighter;
+  letter-spacing: 2px;
+  font-size: 4em;
+  font-family: sans-serif;
+}
+
+.Sequencer {
+  position: relative;
+  display: inline-block;
+  padding: 1em;
+  background: lighten($dark, 5%);
+  border-radius: 25px;
+}
+
+.notes {
+  list-style-type: none;
+  position: absolute;
+  left: -100px;
+  top: 70px;
+  text-align: right;
+  color: white;
+  line-height: 60px;
+  opacity: 0.3;
+}
+
+.buttons {
+  display: flex;
+  padding: 0.35em 0 0.5em;
+
+  button, select, input {
+    margin: 5px;
+    outline: none;
+    background: lighten($dark, 18%);
+    color: black;
+    padding: 1em;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px 0 rgba(black, 0.2);
+    cursor: pointer;
+    border: 2px solid transparent;
+
+    &.active {
+      color: $primary;
+      border: 2px solid $primary;
+    }
+  }
+
+  .select-wrapper {
+    position: relative;
+
+    span {
+      position: absolute;
+      color: white;
+      top: -10px;
+      left: 8px;
+      font-size: 9px;
+      letter-spacing: 1px;
+      opacity: 0.3;
+    }
+  }
+
+  select {
+    position: relative;
+    height: 42px;
+    min-width: 50px;
+  }
+}
+
+.pattern {
+  box-sizing: border-radius;
+  display: flex;
+  flex-direction: column-reverse;
+  flex-wrap: wrap;
+
+  .cell {
+    background: #7C8789;
+    border-radius: $radius;
+    cursor: pointer;
+    width: calc(#{$controller_size} / #{$steps} - 10px);
+    height: calc(#{$controller_size} / 10 - 10px);
+    margin: 5px;
+    box-shadow: -1px 2px 3px -1px rgba(black, 0.7);
+    transition: background 100ms ease;
+
+    &:hover {
+      background: lighten($dark, 5%);
+    }
+
+    &.active {
+      background: lighten($dark, 15%);
+    }
+
+    &.on {
+      background: $primary!important;
+      box-shadow: 0 3px 10px 0 rgba($primary, 0.8);
+    }
+  }
+}
+
+@keyframes colorize {
+  from { background: hsla(0, 100%, 50%, 1) }
+  to   { background: hsla(100%, 100%, 50%, 1) }
+}
+
+
+footer {
+  margin-top: 2em;
+  color: rgba(white, 0.6);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  text-align: center;
+
+  a {
+    color: white;
+    font-weight: 400;
+    border-bottom: 1px dotted;
+    text-decoration: none;
+
+    &:hover {
+      border-bottom: 1px solid;
+    }
+  }
+}
