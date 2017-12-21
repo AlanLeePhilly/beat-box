@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import classNames from 'classnames';
 import Synth from './Synth';
 import Synthful from './Synthful';
+import Sampler from './Sampler';
 
 const defaultPattern = [
   [1,0,0,0,0,0,0,0],
@@ -38,24 +39,26 @@ class Sequencer extends Component {
       noteNames: [],
       bpm: 98,
       release: 100,
-      delay: false
+      delay: false,
+      device: 'synth'
     };
     this.setNotes = this.setNotes.bind(this)
     this.play = this.play.bind(this)
     this.pause = this.pause.bind(this)
     this.nextStep = this.nextStep.bind(this)
+    this.isPlaying = this.isPlaying.bind(this)
   }
 
-    setNotes(noteArr){
+  setNotes(noteArr){
       this.setState({
         notes: noteArr[0],
         noteNames: noteArr[1]
       })
     }
 
-  // componentDidMount(){
-  //   this.setNotes()
-  // }
+  isPlaying(){
+    return this.state.playing
+  }
 
   changeRelease(release) {
     this.setState({
@@ -79,45 +82,11 @@ class Sequencer extends Component {
     });
   }
 
-  // changeWaveType(type) {
-  //   this.setState({
-  //     type: type
-  //   }, () => {
-  //     this.pause();
-  //
-  //     if (this.state.playing) this.play();
-  //   });
-  // }
-
-  // changeScale(scale) {
-  //   this.setState({
-  //     scale: scale
-  //   }, () => {
-  //     this.pause();
-  //     this.setNotes();
-  //     if (this.state.playing) this.play();
-  //   });
-  // }
-
-  // changeRootNote(rootNote) {
-  //   this.setState({
-  //     rootNote: rootNote
-  //   }, () => {
-  //     this.pause();
-  //     this.setNotes();
-  //     if (this.state.playing) this.play();
-  //   });
-  // }
-
-  // changeOctave(octave) {
-  //   this.setState({
-  //     octave: +octave
-  //   }, () => {
-  //     this.pause();
-  //     this.setNotes();
-  //     if (this.state.playing) this.play();
-  //   });
-  // }
+  changeDevice(device){
+    this.setState({
+      device
+    })
+  }
 
   nextStep() {
     this.setState({
@@ -136,10 +105,7 @@ class Sequencer extends Component {
       step: 0
     });
   }
-  componentWillReceiveProps(){
-    debugger
-  }
-  
+
   toggleCell(step, cell) {
 
     var clonedPattern = this.state.pattern.slice(0);
@@ -153,6 +119,27 @@ class Sequencer extends Component {
   }
 
   render() {
+    let device
+    if (this.state.device == 'synth'){
+      device = <Synthful
+                  setNotes={this.setNotes}
+                  state={this.state}
+                  play={this.play}
+                  pause={this.pause}
+                  nextStep={this.nextStep}
+                  isPlaying={this.isPlaying}
+                />
+      }
+    else {
+      device = <Sampler
+                  setNotes={this.setNotes}
+                  state={this.state}
+                  play={this.play}
+                  pause={this.pause}
+                  nextStep={this.nextStep}
+                  isPlaying={this.isPlaying}
+                />
+    }
     const { pattern, step, notes } = this.state;
     const notesArray = Object.keys(notes).map(key => notes[key]);
     let nextStep = () => { this.nextStep() }
@@ -160,18 +147,10 @@ class Sequencer extends Component {
     let pause = () => { this.pause() }
     return (
       <div className="container">
-        <header><h1>Sequencial Sounds</h1></header>
+
         <div className="Sequencer">
 
           <div className="buttons">
-            {/* <button
-              className={this.state.playing ? 'active' : ''}
-              onClick={() => {
-                if (this.state.playing) this.pause();
-                else this.play();
-              }}>
-              Play
-            </button> */}
 
             <div className="select-wrapper">
               <span>BPM</span>
@@ -184,44 +163,30 @@ class Sequencer extends Component {
                 onChange={(e) => this.changeBPM(e.target.value)} />
             </div>
 
-            {/* <div className="select-wrapper">
-              <span>Wave</span>
-              <select
-                value={this.state.type}
-                onChange={(e) => this.changeWaveType(e.target.value)}
-                data-label="wave"
-                data-label="wave"
-                className="wave">
-                <option>Sine</option>
-                <option>Square</option>
-                <option>Sawtooth</option>
-                <option>Triangle</option>
-              </select>
-            </div> */}
-
             <div className="select-wrapper">
               <span>Release</span>
               <input
                 type="number"
                 min="0"
                 max="400"
-                step="1"
+                step="5"
                 defaultValue={this.state.release}
                 onChange={(e) => this.changeRelease(e.target.value)} />
             </div>
 
-            <button
-              onClick={() => {
-                this.setState({
-                  delay: !this.state.delay
-                }, () => {
-                  this.pause();
-                  if (this.state.playing) this.play();
-                });
-              }}
-              className={classNames({ active: this.state.delay })}>
-              Delay
-            </button>
+            <div className="select-wrapper">
+              <span>Instrument</span>
+              <select
+                value={this.state.device}
+                onChange={(e) => this.changeDevice(e.target.value)}
+                data-label="device"
+                data-label="device"
+                className="device">
+                <option>synth</option>
+                <option>sampler</option>
+              </select>
+            </div>
+
           </div>
 
           <ul className="notes">
@@ -249,69 +214,7 @@ class Sequencer extends Component {
             )}
           </div>
 
-          {/* <div className="buttons">
-            <div className="select-wrapper">
-              <span>Root Note</span>
-              <select
-                value={this.state.rootNote}
-                onChange={(e) => this.changeRootNote(e.target.value)}
-                data-label="rootNote"
-                className="rootNote">
-                <option>C</option>
-                <option>C#</option>
-                <option>D</option>
-                <option>D#</option>
-                <option>E</option>
-                <option>F</option>
-                <option>F#</option>
-                <option>G</option>
-                <option>G#</option>
-                <option>A</option>
-                <option>A#</option>
-                <option>B</option>
-              </select>
-            </div>
-
-            <div className="select-wrapper">
-              <span>Octave</span>
-              <select
-                value={this.state.octave}
-                onChange={(e) => this.changeOctave(e.target.value)}
-                data-label="octave"
-                className="octave">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>7</option>
-              </select>
-            </div>
-
-            <div className="select-wrapper">
-              <span>Scale</span>
-              <select
-                value={this.state.scale}
-                onChange={(e) => this.changeScale(e.target.value)}
-                data-label="scale"
-                data-label="scale"
-                className="scale">
-                <option>chromatic</option>
-                <option>major</option>
-                <option>minor</option>
-                <option>majorPent</option>
-                <option>minorPent</option>
-              </select>
-            </div>
-          </div> */}
-          <Synthful
-            setNotes={this.setNotes}
-            state={this.state}
-            play={this.play}
-            pause={this.pause}
-            nextStep={this.nextStep}
-          />
+          {device}
         </div>
       </div>
     )

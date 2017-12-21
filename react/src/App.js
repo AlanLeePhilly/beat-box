@@ -1,37 +1,17 @@
 import React from 'react';
-// import ComponentToRender from './RelativePath'
-// import DataToUse from './RelativePath'
+import { Router, browserHistory, Route, IndexRoute } from 'react-router';
+import NavBar from './components/NavBar';
+import Sequencer from './components/Sequencer'
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      pieceOfState: null,
-      anotherPiece: []
-    }
-    this.someFunction = this.someFunction.bind(this)
-  }
 
-  someFunction(arg) {
-    if (true){
-      this.setState({
-        pieceOfState: arg
-      })
-    } else {
-      this.setState({
-        selectedId: null
-      })
-    }
-  }
-
-  render() {
-
-    return(
-      <div>
-        Bum Bum Buuuum
-      </div>
-    )
-  }
+const App = props => {
+  return(
+    <Router history={browserHistory}>
+      <Route path='/' component={NavBar}>
+        <IndexRoute component={Sequencer} />
+      </Route>
+    </Router>
+  )
 }
 
 export default App;

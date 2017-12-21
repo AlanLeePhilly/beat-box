@@ -42,7 +42,6 @@ var getNotes = function(rootNote, octave, scale) {
   return noteArr
   }
 
-
 class Synthful extends React.Component {
   constructor(props) {
     super(props);
@@ -58,6 +57,10 @@ class Synthful extends React.Component {
 
   componentDidMount(){
     this.setNotes()
+  }
+
+  isPlaying(){
+    this.props.isPlaying()
   }
 
   pause(){
@@ -80,7 +83,6 @@ class Synthful extends React.Component {
     }, () => {
       this.pause();
       this.setNotes();
-      this.onPlay();
     });
   }
 
@@ -115,7 +117,7 @@ class Synthful extends React.Component {
   }
 
   onPlay(){
-    if (this.props.state.playing) {
+    if (this.props.isPlaying()) {
       this.pause();
     } else {
       this.props.play()
@@ -147,7 +149,6 @@ class Synthful extends React.Component {
       oscArr[i].connect(gainArr[i]);
       gainArr[i].connect(this.ctx.destination);
 
-
     }
     var delay = this.ctx.createDelay();
         delay.delayTime.value = state.delay ? (state.bpm / 10) / 100 : 0;
@@ -162,21 +163,22 @@ class Synthful extends React.Component {
     // delay.connect(this.ctx.destination);
 
     // osc.start(0);
+
     setTimeout(() => {
       gainArr[0].gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
-    }, state.release);
+    }, parseInt(this.props.state.release));
 
     setTimeout(() => {
       gainArr[1].gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
-    }, state.release);
+    }, parseInt(this.props.state.release));
 
     setTimeout(() => {
       gainArr[2].gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
-    }, state.release);
+    }, parseInt(this.props.state.release));
 
     setTimeout(() => {
       gainArr[3].gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
-    }, state.release);
+    }, parseInt(this.props.state.release));
 
   }
 
