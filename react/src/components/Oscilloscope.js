@@ -45,7 +45,9 @@ function drawScope(analyser, ctx) {
 
   ctx.stroke();
 }
-
+  return(
+    <div></div>
+  )
 }
 
 export default Oscilloscope;
