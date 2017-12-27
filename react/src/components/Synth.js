@@ -1,60 +1,97 @@
 import React from 'react';
 
+const ROOT = ['C','C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+const OCTAVE = [...Array(8).keys()]
+const SCALE = ['chromatic', 'major', 'minor', 'majorPent', 'minorPent']
+const WAVE = ['Sine', 'Square', 'Triange', 'Sawtooth']
+const GAIN = [...Array(11).keys()]
+const Synth = props =>{
 
-class Synth {
-  constructor() {
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  let rootArr = ROOT.map((r, i) => <option key={i}>{r}</option>)
+  let octArr = OCTAVE.map((o, i) => <option key={i}>{o}</option>)
+  let scaleArr = SCALE.map((s, i) => <option key={i}>{s}</option>)
+  let waveArr = WAVE.map((w, i) => <option key={i}>{w}</option>)
+  let gainArr = GAIN.map((g, i) => <option key={i}>{g}</option>)
 
-  playNotes(notes = [], state = {}) {
+  return(
+    <div className="buttons">
+      <button
+        className={props.isPlaying ? 'active' : ''}
+        onClick={() => { props.play(); }}>
+        Play
+      </button>
 
-    if (!notes.length) return;
-    var oscArr = [this.ctx.createOscillator(), this.ctx.createOscillator(), this.ctx.createOscillator(), this.ctx.createOscillator()];
-    var gainArr = [this.ctx.createGain(), this.ctx.createGain(), this.ctx.createGain(), this.ctx.createGain()];
+      <div className="select-wrapper">
+        <span>Root Note</span>
+        <select
+          name="rootNote"
+          value={props.synthData.rootNote}
+          onChange={(e) => {
+            props.handleChange(e.target.name, e.target.value)
+          }}
+          data-label="rootNote"
+          className="rootNote">
+          {rootArr}
+        </select>
+      </div>
 
-    for (var i=0; i < notes.length; i++) {
-      oscArr[i].type = state.type.toLowerCase();
-      oscArr[i].frequency.value = notes[i];
-      oscArr[i].start(0);
-      gainArr[i].gain.value = 1;
+      <div className="select-wrapper">
+        <span>Octave</span>
+        <select
+          name="octave"
+          value={props.synthData.octave}
+          onChange={(e) => {
+            props.handleChange(e.target.name, parseInt(e.target.value))
+          }}
+          data-label="octave"
+          className="octave">
+          {octArr}
+        </select>
+      </div>
 
-      oscArr[i].connect(gainArr[i]);
-      gainArr[i].connect(this.ctx.destination);
+      <div className="select-wrapper">
+        <span>Scale</span>
+        <select
+          name="scale"
+          value={props.synthData.scale}
+          onChange={(e) => {
+            props.handleChange(e.target.name, e.target.value)
+          }}
+          data-label="scale"
+          className="scale">
+          {scaleArr}
+        </select>
+      </div>
 
+      <div className="select-wrapper">
+        <span>Wave</span>
+        <select
+          name="type"
+          value={props.synthData.type}
+          onChange={(e) => {
+            props.handleChange(e.target.name, e.target.value.toLowerCase())
+          }}
+          data-label="wave"
+          className="wave">
+          {waveArr}
+        </select>
+      </div>
 
-    }
-    var delay = this.ctx.createDelay();
-        delay.delayTime.value = state.delay ? (state.bpm / 10) / 100 : 0;
-
-    /* VCA */
-
-
-    /* connections */
-    // osc.connect(vca);
-    // vca.connect(delay);
-    // vca.connect(this.ctx.destination);
-    // delay.connect(this.ctx.destination);
-
-    // osc.start(0);
-    setTimeout(() => {
-      gainArr[0].gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
-    }, state.release);
-
-    setTimeout(() => {
-      gainArr[1].gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
-    }, state.release);
-
-    setTimeout(() => {
-      gainArr[2].gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
-    }, state.release);
-
-    setTimeout(() => {
-      gainArr[3].gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
-    }, state.release);
-
-  }
+      <div className="select-wrapper">
+        <span>Volume</span>
+        <select
+          name="masterGain"
+          value={props.synthData.masterGain * 10}
+          onChange={(e) => {
+            props.handleChange(e.target.name, e.target.value/10)
+          }}
+          data-label="masterGain"
+          className="masterGain">
+          {gainArr}
+        </select>
+      </div>
+    </div>
+  )
 }
-
-
 
 export default Synth;
