@@ -6,7 +6,7 @@ const Spectrum = props =>{
     var spectCtx = document.getElementById('spectrum').getContext('2d');
     draw();
   }
-  
+
   function draw() {
     drawSpectrum(props.analyser, spectCtx);
     requestAnimationFrame(draw);
@@ -33,7 +33,7 @@ const Spectrum = props =>{
     ctx.stroke();
   }
 
-  return()
+
 }
 
 export default Spectrum;
