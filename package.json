@@ -45,7 +45,10 @@
     "classnames": "^2.2.5",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-router": "^3.0.2",
+    "react-input-slider": "^4.0.1",
+    "react-redux": "^5.0.6",
+    "react-router": "^3.2.0",
+    "redux": "^3.7.2",
     "webpack": "^2.6.0"
   }
 }

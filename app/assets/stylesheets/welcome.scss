@@ -20,6 +20,10 @@ body {
   text-align: center;
 }
 
+.specs {
+   width: 400;
+  height: 200;
+}
 .flex {
   display: flex;
   flex-direction: row;
@@ -39,7 +43,7 @@ h1 {
   position: relative;
   display: inline-block;
   padding: 1em;
-  background: lighten($dark, 5%);
+  background: $dark;
   border-radius: 25px;
 }
 
@@ -105,7 +109,7 @@ h1 {
   flex-wrap: wrap;
 
   .cell {
-    background: #7C8789;
+    background: darken(#7C8789, 10%);
     border-radius: $radius;
     cursor: pointer;
     width: calc(#{$controller_size} / #{$steps} - 10px);
@@ -119,7 +123,12 @@ h1 {
     }
 
     &.active {
-      background: lighten($dark, 15%);
+      background: lighten($dark, 10%);
+
+      &.on {
+        background: lighten($primary, 10%)!important;
+        box-shadow: 0 3px 10px 0 rgba($primary, 0.8);
+      }
     }
 
     &.on {

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Router, browserHistory, Route, IndexRoute } from 'react-router';
 import NavBar from './components/NavBar';
-import Sequencer from './components/Sequencer'
+import SequencerContainer from './containers/SequencerContainer'
 
 
 const App = props => {
   return(
     <Router history={browserHistory}>
       <Route path='/' component={NavBar}>
-        <IndexRoute component={Sequencer} />
+        <IndexRoute component={SequencerContainer} />
       </Route>
     </Router>
   )
