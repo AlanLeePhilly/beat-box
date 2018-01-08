@@ -15,11 +15,7 @@ const Synth = props =>{
 
   return(
     <div className="buttons">
-      <button
-        className={props.isPlaying ? 'active' : ''}
-        onClick={() => { props.play(); }}>
-        Play
-      </button>
+
 
       <div className="select-wrapper">
         <span>Root Note</span>
