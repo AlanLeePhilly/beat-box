@@ -1,5 +1,7 @@
-export const setRoot = (rootNote) => ({
-  type: 'SET_ROOT',
+
+
+export const setRootNote = (rootNote) => ({
+  type: 'SET_ROOTNOTE',
   rootNote: rootNote
 })
 
@@ -13,14 +15,14 @@ export const setScale = (scale) => ({
   scale: scale
 })
 
-export const setNotes = (notes) => ({
-  type: 'SET_NOTES',
+export const setFreqs = (freqs) => ({
+  type: 'SET_FREQS',
   notes: notes
 })
 
 export const setWaveType = (waveType) => ({
   type: 'SET_WAVETYPE',
-  waveType: wavetype
+  waveType: waveType
 })
 
 export const setMasterGain = (masterGain) => ({

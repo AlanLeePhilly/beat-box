@@ -1,7 +1,6 @@
 let timer = null;
 let currStep = 0;
 
-
 export const setPattern = (pattern) => ({
   type: 'SET_PATTERN',
   pattern: pattern
@@ -21,7 +20,7 @@ export const play = (bpm, totalSteps) => (dispatch) => {
        currStep = currStep + 1
      }
     dispatch(setCurrentStep(currStep))
-  }, 600);
+  }, 60000 / (bpm * 2));
 
   dispatch({
     type: 'PLAY',

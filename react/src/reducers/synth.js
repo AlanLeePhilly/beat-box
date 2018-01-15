@@ -2,36 +2,36 @@ const initialState = {
   rootNote: 'C',
   octave: 4,
   scale: 'chromatic',
-  notes: [],
-  type: 'sine',
+  freqs: [],
+  waveType: 'sine',
   masterGain: 1
 }
 
 export default function synth(state = initialState, action) {
   switch (action.type) {
-    case 'SET_ROOT':
+    case 'SET_ROOTNOTE':
       return Object.assign({}, state, {
-        rootNote: 'action.rootNote'
+        rootNote: action.rootNote
       })
     case 'SET_OCTAVE':
       return Object.assign({}, state, {
-        octave: 'action.octave'
+        octave: action.octave
       })
     case 'SET_SCALE':
       return Object.assign({}, state, {
-        scale: 'action.scale'
+        scale: action.scale
       })
-    case 'SET_NOTES':
+    case 'SET_FREQS':
       return Object.assign({}, state, {
-        notes: 'action.notes'
+        freqs: action.freqs
       })
     case 'SET_WAVETYPE':
       return Object.assign({}, state, {
-        type: 'action.waveType'
+        type: action.waveType
       })
     case 'SET_MASTERGAIN':
       return Object.assign({}, state, {
-        masterGain: 'action.masterGain'
+        masterGain: action.masterGain
       })
     default:
       return state

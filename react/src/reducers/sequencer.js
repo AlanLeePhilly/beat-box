@@ -15,7 +15,7 @@ const initialState =
     playing: false,
     steps: 8,
     currentStep: 0,
-    noteNames: [''],
+    noteNames: ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C'],
     bpm: 98,
     release: 100,
     device: 'synth'
@@ -36,7 +36,7 @@ export default function sequencer(state = initialState, action) {
       return Object.assign({}, state, {
         pattern: action.pattern
       })
-      case 'SET_BPM':
+    case 'SET_BPM':
       return Object.assign({}, state, {
         bpm: action.bpm
       })

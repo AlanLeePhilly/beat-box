@@ -2,12 +2,11 @@ import React, { PropTypes, Component } from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux'
 import { play, pause, setPattern, setBpm, setCurrentStep, setSteps, setNoteNames, setRelease, setDevice} from '../actions/sequencerAdjust'
-import Sampler from '../components/Sampler';
-import SeqPlay from '../components/SeqPlay';
-import SeqBpm from '../components/SeqBpm';
-import SeqRelease from '../components/SeqRelease';
-import SeqClear from '../components/SeqClear';
-import SeqGrid from '../components/SeqGrid';
+import SeqPlay from '../components/sequencer/SeqPlay';
+import SeqBpm from '../components/sequencer/SeqBpm';
+import SeqRelease from '../components/sequencer/SeqRelease';
+import SeqClear from '../components/sequencer/SeqClear';
+import SeqGrid from '../components/sequencer/SeqGrid';
 import { bindActionCreators } from 'redux'
 
 const SequencerContainer = props => {
@@ -32,14 +31,6 @@ const SequencerContainer = props => {
     else {
       props.play(props.bpm, props.steps)
     }
-  }
-
-
-  function nextStep(){
-
-    let nextStep = props.currentStep + 1
-    // let currentStep = props.currentStep < props.steps - 1 ? props.currentStep + 1 : 0
-    props.setCurrentStep(nextStep)
   }
 
   function toggleCell(step, cell) {
@@ -77,8 +68,8 @@ const SequencerContainer = props => {
           pattern={props.pattern}
           currentStep={props.currentStep}
           toggleCell={toggleCell}
+          noteNames={props.noteNames}
         />
-
       </div>
     )
 

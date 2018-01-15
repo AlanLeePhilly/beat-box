@@ -2,7 +2,7 @@ import React from 'react';
 
 const ROOT = ['C','C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const OCTAVE = [...Array(8).keys()]
-const SCALE = ['chromatic', 'major', 'minor', 'majorPent', 'minorPent']
+const SCALENAMES = ['chromatic', 'major', 'minor', 'majorPent', 'minorPent']
 const WAVE = ['Sine', 'Square', 'Triange', 'Sawtooth']
 const GAIN = [...Array(11).keys()]
 const Synth = props =>{
