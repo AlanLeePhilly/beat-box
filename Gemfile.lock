@@ -190,6 +190,8 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
+    rails-settings-cached (0.4.6)
+      rails (>= 4.2.0)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -317,6 +319,7 @@ DEPENDENCIES
   pry-rails
   puma (~> 3.0)
   rails (~> 5.1.4)
+  rails-settings-cached (~> 0.4.0)
   rails_12factor
   rspec-rails
   sass-rails (~> 5.0)
@@ -334,4 +337,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

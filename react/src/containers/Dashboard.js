@@ -1,14 +1,16 @@
 import React from 'react';
 import SequencerContainer from './SequencerContainer'
 import SynthfulContainer from './SynthfulContainer'
+import SamplerContainer from './SamplerContainer'
 
 const Dashboard = props =>{
 
 
   return(
-    <div>
+    <div className="Sequence-container Sequencer">
       <SequencerContainer />
-      <SynthfulContainer />
+      <SamplerContainer />
+      {/* <SynthfulContainer /> */}
     </div>
   )
 }

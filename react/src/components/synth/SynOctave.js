@@ -13,7 +13,7 @@ let octArr = OCTAVE.map((o, i) => <option key={i}>{o}</option>)
         value={props.octave}
         onChange={(e) => {
           props.setOctave(parseInt(e.target.value))
-          props.setFreqs()
+          // props.setFreqs()
         }}
         data-label="octave"
         className="octave">

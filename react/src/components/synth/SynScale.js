@@ -13,7 +13,7 @@ const SynScale = props =>{
         value={props.scale}
         onChange={(e) => {
           props.setScale(e.target.value)
-          props.setFreqs()
+          // props.setFreqs()
         }}
         data-label="scale"
         className="scale">

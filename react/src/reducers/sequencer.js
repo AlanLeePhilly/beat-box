@@ -15,7 +15,7 @@ const initialState =
     playing: false,
     steps: 8,
     currentStep: 0,
-    noteNames: ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C'],
+    noteNames: ['X', 'X', 'X', 'F', 'G', 'A', 'B', 'C'],
     bpm: 98,
     release: 100,
     device: 'synth'

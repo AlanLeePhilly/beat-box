@@ -13,7 +13,6 @@ const SynRootNote = props =>{
         value={props.rootNote}
         onChange={(e) => {
           props.setRootNote(e.target.value)
-          props.setFreqs()
         }}
         data-label="rootNote"
         className="rootNote">

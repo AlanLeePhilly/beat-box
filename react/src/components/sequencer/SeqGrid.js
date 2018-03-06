@@ -26,7 +26,7 @@ const SeqGrid = props =>{
     }
 
   return(
-    <div>
+    <div className="row">
       <ul className="notes">
         {noteNames}
       </ul>

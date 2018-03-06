@@ -1,0 +1,35 @@
+<br/><br/>
+
+<%= form_for(@sample) do |f| %>
+  <% if @sample.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@sample.errors.count, "error") %> prohibited this sample from being saved:</h2>
+
+      <ul>
+      <% @sample.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="columns large-4">
+      <%= f.text_field :drum_name %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="columns large-4">
+      <%= f.text_field :path %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="columns large-4">
+      <%= f.submit 'Save Sample File', class: 'button small success' %>
+    </div>
+  </div>
+<% end %>
+
+<br/><br/>

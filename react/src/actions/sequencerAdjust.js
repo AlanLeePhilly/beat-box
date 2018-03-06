@@ -11,28 +11,32 @@ export const setBpm = (bpm) => ({
   bpm: bpm
 })
 
-export const play = (bpm, totalSteps) => (dispatch) => {
- clearInterval(timer);
-  timer = setInterval(() => {
-    if (currStep > totalSteps - 2){
-       currStep = 0
-    } else {
-       currStep = currStep + 1
-     }
-    dispatch(setCurrentStep(currStep))
-  }, 60000 / (bpm * 2));
+// export const play = (bpm, totalSteps) => (dispatch) => {
+//  clearInterval(timer);
+//   timer = setInterval(() => {
+//     if (currStep > totalSteps - 2){
+//        currStep = 0
+//     } else {
+//        currStep = currStep + 1
+//      }
+//     dispatch(setCurrentStep(currStep))
+//   }, 60000 / (bpm * 2));
+//
+//   dispatch({
+//     type: 'PLAY',
+//     playing: true
+//   });
+// }
 
-  dispatch({
-    type: 'PLAY',
-    playing: true
-  });
-}
-
+export const play = () => ({
+  type: 'PLAY',
+  playing: true
+})
 
 export const pause = () => (dispatch) => {
-  clearInterval(timer);
-  currStep = 0;
-  dispatch(setCurrentStep(currStep))
+  // clearInterval(timer);
+  // currStep = 0;
+  dispatch(setCurrentStep(0))
   dispatch({
     type: 'PAUSE',
     playing: false
