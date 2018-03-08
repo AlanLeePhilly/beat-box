@@ -1,6 +1,6 @@
-import Sequencer from '../../src/components/Sequencer';
+import Sequencer from '../../src/components/sequencer/Sequencer';
 
-describe('Sequencer', () =>{
+xdescribe('Sequencer', () =>{
   let wrapper;
   beforeEach(()=>{
     var data = {
@@ -31,7 +31,5 @@ describe('Sequencer', () =>{
     expect(wrapper.find('select').length).toBe(1);
 
   })
-
-
 
  });

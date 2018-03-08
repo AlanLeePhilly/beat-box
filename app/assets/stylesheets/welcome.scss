@@ -11,7 +11,7 @@ $radius: 0px;
 
 body {
   // background: $dark;
-  background-color: black;
+  // background-color: black;
   font-family: 'Helvetica Neue';
   display: flex;
   flex-direction: column;
@@ -83,6 +83,7 @@ h1 {
 
   .select-wrapper {
     position: relative;
+    display: flex;
 
     span {
       position: absolute;
@@ -102,7 +103,7 @@ h1 {
   }
 }
 
-.pattern {
+.step {
   box-sizing: border-radius;
   display: flex;
   flex-direction: column-reverse;
