@@ -1,10 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux'
-import {NOTEFREQS, ROOTNOTES, SCALESTEPS} from '../constants/Constants'
+import {NOTEFREQS, ROOTNOTES, SCALESTEPS, DRUMNAMES} from '../constants/Constants'
 import {setMasterGain, nextStep, play, pause} from '../actions/synthAdjust'
 import {setNoteNames} from '../actions/sequencerAdjust'
+import {setKitName} from '../actions/samplerAdjust'
 import SamMasterGain from '../components/sampler/SamMasterGain'
 import SamPlay from '../components/sampler/SamPlay'
+import SamKitSelector from '../components/sampler/SamKitSelector'
 import {BufferLoader} from '../helpers/BufferLoader'
 
 class SamplerContainer extends React.Component {
@@ -16,8 +18,9 @@ class SamplerContainer extends React.Component {
       interval: null
     }
     this.onPlay = this.onPlay.bind(this)
-    this.playNotes = this.playNotes.bind(this)
     this.setNoteNames = this.setNoteNames.bind(this)
+    this.finishedLoading = this.finishedLoading.bind(this)
+    this.loadSamples = this.loadSamples.bind(this)
     this.finishedLoading = this.finishedLoading.bind(this)
   }
 
@@ -26,7 +29,8 @@ class SamplerContainer extends React.Component {
   }
 
   setNoteNames(){
-    let noteNames = ['these', 'are', 'test', 'names', 'for', 'samples', 'ok', 'done']
+    let noteNames = DRUMNAMES.map(drumName => `${this.props.kitName} - ${drumName}`)
+    noteNames.push("x x","x x")
     this.props.setNoteNames(noteNames)
   }
 
@@ -46,20 +50,22 @@ class SamplerContainer extends React.Component {
     }
   }
 
+  kitToURLs(kitName){
+    return DRUMNAMES.map(drumName => `https://s3.amazonaws.com/sequential-sounds-samples/${kitName}/${drumName}.wav`)
+  }
+
   loadSamples(){
     var bufferLoader = new BufferLoader(
       this.ctx,
-      [
-        'https://s3.amazonaws.com/sequential-sounds-samples/4OP-FM/hihat.wav',
-        'https://s3.amazonaws.com/sequential-sounds-samples/4OP-FM/snare.wav',
-
-      ],
-      this.finishedLoading
+      this.kitToURLs(this.props.kitName)
+      ,
+      this.setNoteNames()
       );
     bufferLoader.load();
   }
 
   finishedLoading(bufferList) {
+    debugger
     // Create two sources and play them both together.
     var source1 = this.ctx.createBufferSource();
     var source2 = this.ctx.createBufferSource();
@@ -75,14 +81,17 @@ class SamplerContainer extends React.Component {
   render() {
     return(
       <div className="seq-button buttons row">
-        <button onClick={ () => { this.setFreqs() } }>
-          Update
+        <button onClick={ () => { this.loadSamples() } }>
+          LoadKit
         </button>
         <SamPlay
           play={this.onPlay}
           isPlaying={this.props.playing}
         />
-
+        <SamKitSelector
+          kitName={this.props.kitName}
+          setKitName={this.props.setKitName}
+        />
         <SamMasterGain
           masterGain={this.props.masterGain}
           setMasterGain={this.props.setMasterGain}
@@ -98,6 +107,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setMasterGain: (masterGain) => dispatch(setMasterGain(masterGain)),
     setNoteNames: (noteNames) => dispatch(setNoteNames(noteNames)),
+    setKitName: (kitName) => dispatch(setKitName(kitName)),
     nextStep: () => dispatch(nextStep()),
     play: () => dispatch(play()),
     pause: () => dispatch(pause())
@@ -111,8 +121,9 @@ const mapStateToProps = (state) => {
     currentStep: state.sequencer.currentStep,
     release: state.sequencer.release,
     noteNames: state.sequencer.noteNames,
-    masterGain: state.synth.masterGain,
-    bpm: state.sequencer.bpm
+    bpm: state.sequencer.bpm,
+    kitName: state.sampler.kitName,
+    masterGain: state.synth.masterGain
   }
 }
 

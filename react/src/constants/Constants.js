@@ -30,6 +30,9 @@ export const NOTEFREQS = {
   "C 8": 4186.01,"C#8": 4434.92,"D 8": 4698.64,"D#8": 4978.03
   };
 
+export const KITNAMES = ["none", "4OP-FM", "acoustic-kit"]
+
+export const DRUMNAMES = ['kick', 'snare', 'hihat', 'tom1', 'tom2', 'tom3']
 
 export const OCTAVE = [...Array(8).keys()]
 export const GAIN = [...Array(11).keys()]
