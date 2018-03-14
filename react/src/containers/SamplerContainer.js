@@ -21,7 +21,6 @@ class SamplerContainer extends React.Component {
     this.setNoteNames = this.setNoteNames.bind(this)
     this.finishedLoading = this.finishedLoading.bind(this)
     this.loadSamples = this.loadSamples.bind(this)
-    this.finishedLoading = this.finishedLoading.bind(this)
   }
 
   componentDidMount(){
@@ -40,12 +39,12 @@ class SamplerContainer extends React.Component {
       this.props.pause()
     } else {
       this.props.play()
-      this.playNotes()
+      this.finishedLoading()
       this.interval = setInterval(() => {
         this.props.nextStep()
         // var next = this.this.props.data.pattern[this.this.props.data.currentStep]
         // var seqData = this.this.props.data
-        this.playNotes();
+        this.finishedLoading();
       }, ((60 * 1000) / this.props.bpm));
     }
   }
@@ -57,15 +56,13 @@ class SamplerContainer extends React.Component {
   loadSamples(){
     var bufferLoader = new BufferLoader(
       this.ctx,
-      this.kitToURLs(this.props.kitName)
-      ,
-      this.setNoteNames()
+      this.kitToURLs(this.props.kitName),
+      this.finishedLoading
       );
     bufferLoader.load();
   }
 
   finishedLoading(bufferList) {
-    debugger
     // Create two sources and play them both together.
     var source1 = this.ctx.createBufferSource();
     var source2 = this.ctx.createBufferSource();
