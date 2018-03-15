@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {NOTEFREQS, ROOTNOTES, SCALESTEPS, DRUMNAMES} from '../constants/Constants'
 import {setMasterGain, nextStep, play, pause} from '../actions/synthAdjust'
 import {setNoteNames} from '../actions/sequencerAdjust'
-import {setKitName} from '../actions/samplerAdjust'
+import {setKitName, setBufferList} from '../actions/samplerAdjust'
 import SamMasterGain from '../components/sampler/SamMasterGain'
 import SamPlay from '../components/sampler/SamPlay'
 import SamKitSelector from '../components/sampler/SamKitSelector'
@@ -15,12 +15,14 @@ class SamplerContainer extends React.Component {
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     let analyser
     this.state = {
-      interval: null
+      interval: null,
+      bufferList: []
     }
     this.onPlay = this.onPlay.bind(this)
     this.setNoteNames = this.setNoteNames.bind(this)
     this.finishedLoading = this.finishedLoading.bind(this)
     this.loadSamples = this.loadSamples.bind(this)
+    this.setBufferList = this.setBufferList.bind(this)
   }
 
   componentDidMount(){
@@ -57,22 +59,38 @@ class SamplerContainer extends React.Component {
     var bufferLoader = new BufferLoader(
       this.ctx,
       this.kitToURLs(this.props.kitName),
-      this.finishedLoading
+      this.setBufferList
       );
     bufferLoader.load();
   }
 
-  finishedLoading(bufferList) {
-    // Create two sources and play them both together.
-    var source1 = this.ctx.createBufferSource();
-    var source2 = this.ctx.createBufferSource();
-    source1.buffer = bufferList[0];
-    source2.buffer = bufferList[1];
+  setBufferList(bufferList){
+    this.setState({bufferList: bufferList})
+  }
 
-    source1.connect(this.ctx.destination);
-    source2.connect(this.ctx.destination);
-    source1.start(0);
-    source2.start(0);
+  finishedLoading() {
+    let stepPattern = this.props.pattern[this.props.currentStep]
+    let bufferList = this.state.bufferList.map((freq, i) =>
+      stepPattern[i] === 1 ? freq : null
+    ).filter(x => x)
+    let sourceArr = []
+    let gainArr = []
+    let masterGain = this.ctx.createGain()
+    for (var i=0; i < bufferList.length; i++) {
+      sourceArr[i] = this.ctx.createBufferSource();
+      sourceArr[i].buffer = bufferList[i]
+      sourceArr[i].start(0);
+      gainArr[i] = this.ctx.createGain()
+      gainArr[i].gain.value = 1;
+      sourceArr[i].connect(gainArr[i]);
+      gainArr[i].connect(masterGain);
+    }
+    
+    masterGain.connect(this.ctx.destination)
+
+    setTimeout(() => {
+      masterGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
+    }, parseInt(this.props.release));
   }
 
   render() {
@@ -102,6 +120,7 @@ class SamplerContainer extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    setBufferList: (bufferList) => dispatch(setBufferList(bufferList)),
     setMasterGain: (masterGain) => dispatch(setMasterGain(masterGain)),
     setNoteNames: (noteNames) => dispatch(setNoteNames(noteNames)),
     setKitName: (kitName) => dispatch(setKitName(kitName)),
@@ -120,6 +139,7 @@ const mapStateToProps = (state) => {
     noteNames: state.sequencer.noteNames,
     bpm: state.sequencer.bpm,
     kitName: state.sampler.kitName,
+    bufferList: state.sampler.bufferList,
     masterGain: state.synth.masterGain
   }
 }
