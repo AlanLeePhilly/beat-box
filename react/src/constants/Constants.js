@@ -36,3 +36,5 @@ export const DRUMNAMES = ['kick', 'snare', 'hihat', 'tom1', 'tom2', 'tom3']
 
 export const OCTAVE = [...Array(8).keys()]
 export const GAIN = [...Array(11).keys()]
+
+export const DEVICE_LIST = ['synth', 'sampler']

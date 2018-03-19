@@ -31,7 +31,7 @@ class SamplerContainer extends React.Component {
 
   setNoteNames(){
     let noteNames = DRUMNAMES.map(drumName => `${this.props.kitName} - ${drumName}`)
-    noteNames.push("x x","x x")
+    noteNames.push("","")
     this.props.setNoteNames(noteNames)
   }
 
