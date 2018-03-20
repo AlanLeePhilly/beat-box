@@ -6,7 +6,7 @@ import React from 'react';
 class Sampler extends React.Component {
   constructor(props) {
     super(props);
-    this.ctx ||= new (window.AudioContext || window.webkitAudioContext)();
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     this.state = {
       notes: []
     }
