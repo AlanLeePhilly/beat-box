@@ -10,6 +10,8 @@ import DeviceToggle from '../components/dashboard/DeviceToggle';
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    
     this.handleChange = this.handleChange.bind(this)
   }
   handleChange(device){
@@ -19,9 +21,13 @@ class Dashboard extends React.Component {
   render(){
     let selectedDevice 
     if (this.props.device == "synth"){
-      selectedDevice = <SynthfulContainer />
+      selectedDevice = <SynthfulContainer 
+                        ctx={this.ctx}
+                      />
     } else {
-      selectedDevice = <SamplerContainer />
+      selectedDevice = <SamplerContainer 
+                        ctx={this.ctx}
+                      />
     }
     
     return(
@@ -30,8 +36,8 @@ class Dashboard extends React.Component {
           device={this.props.device}
           handler={this.handleChange}
         />
-        <SequencerContainer />
         {selectedDevice}
+        <SequencerContainer />
       </div>
     )
   }

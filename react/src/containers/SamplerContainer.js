@@ -12,7 +12,6 @@ import {BufferLoader} from '../helpers/BufferLoader'
 class SamplerContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     let analyser
     this.state = {
       interval: null,
@@ -47,7 +46,7 @@ class SamplerContainer extends React.Component {
         // var next = this.this.props.data.pattern[this.this.props.data.currentStep]
         // var seqData = this.this.props.data
         this.finishedLoading();
-      }, ((60 * 1000) / this.props.bpm));
+      }, ((60 * 500) / this.props.bpm));
     }
   }
 
@@ -57,7 +56,7 @@ class SamplerContainer extends React.Component {
 
   loadSamples(){
     var bufferLoader = new BufferLoader(
-      this.ctx,
+      this.props.ctx,
       this.kitToURLs(this.props.kitName),
       this.setBufferList
       );
@@ -75,21 +74,21 @@ class SamplerContainer extends React.Component {
     ).filter(x => x)
     let sourceArr = []
     let gainArr = []
-    let masterGain = this.ctx.createGain()
+    let masterGain = this.props.ctx.createGain()
     for (var i=0; i < bufferList.length; i++) {
-      sourceArr[i] = this.ctx.createBufferSource();
+      sourceArr[i] = this.props.ctx.createBufferSource();
       sourceArr[i].buffer = bufferList[i]
       sourceArr[i].start(0);
-      gainArr[i] = this.ctx.createGain()
+      gainArr[i] = this.props.ctx.createGain()
       gainArr[i].gain.value = 1;
       sourceArr[i].connect(gainArr[i]);
       gainArr[i].connect(masterGain);
     }
     
-    masterGain.connect(this.ctx.destination)
+    masterGain.connect(this.props.ctx.destination)
 
     setTimeout(() => {
-      masterGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
+      masterGain.gain.setTargetAtTime(0, this.props.ctx.currentTime, 0.015);
     }, parseInt(this.props.release));
   }
 

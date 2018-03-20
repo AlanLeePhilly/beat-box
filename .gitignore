@@ -25,4 +25,4 @@
 
 # Ignore application configuration
 /config/application.yml
-.codeclimate.yml
+
