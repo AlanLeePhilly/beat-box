@@ -43,11 +43,11 @@ const SequencerContainer = props => {
     return (
       <div>
         <div className="seq-button buttons row">
-          <SeqPlay
+          {/* <SeqPlay
             play={play}
             pause={props.pause}
             isPlaying={props.playing}
-          />
+          /> */}
 
           <SeqBpm
             setBpm={props.setBpm}

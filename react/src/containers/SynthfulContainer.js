@@ -13,7 +13,6 @@ import SynPlay from '../components/synth/SynPlay'
 class SynthfulContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     let analyser
     this.state = {
       interval: null
@@ -49,7 +48,7 @@ class SynthfulContainer extends React.Component {
         // var next = this.this.props.data.pattern[this.this.props.data.currentStep]
         // var seqData = this.this.props.data
         this.playNotes();
-      }, ((60 * 1000) / this.props.bpm));
+      }, ((60 * 500) / this.props.bpm));
     }
   }
 
@@ -65,27 +64,27 @@ class SynthfulContainer extends React.Component {
       stepPattern[i] === 1 ? freq : null
     ).filter(x => x)
     let voiceCount = freqArr.length
-    let masterGain = this.ctx.createGain()
-    this.analyser = this.ctx.createAnalyser()
+    let masterGain = this.props.ctx.createGain()
+    this.analyser = this.props.ctx.createAnalyser()
     this.analyser.fftSize = 2048;
     let oscArr = []
     let gainArr = []
     for (var i=0; i < voiceCount; i++) {
-      oscArr[i] = this.ctx.createOscillator()
+      oscArr[i] = this.props.ctx.createOscillator()
       oscArr[i].type = this.props.waveType.toLowerCase();
       oscArr[i].frequency.value = freqArr[i];
       oscArr[i].start(0);
-      gainArr[i] = this.ctx.createGain()
+      gainArr[i] = this.props.ctx.createGain()
       gainArr[i].gain.value = 1;
 
       oscArr[i].connect(gainArr[i]);
       gainArr[i].connect(masterGain);
     }
     masterGain.connect(this.analyser)
-    this.analyser.connect(this.ctx.destination)
+    this.analyser.connect(this.props.ctx.destination)
 
     setTimeout(() => {
-      masterGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
+      masterGain.gain.setTargetAtTime(0, this.props.ctx.currentTime, 0.015);
     }, parseInt(this.props.release));
   }
 

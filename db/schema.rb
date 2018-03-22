@@ -10,12 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171221194025) do
+ActiveRecord::Schema.define(version: 20180319174946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "patterns", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name", null: false
+    t.integer "grid", null: false, array: true
+    t.string "device", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_patterns_on_user_id"
+  end
+
+  create_table "samples", force: :cascade do |t|
+    t.string "kit_name", null: false
+    t.string "drum_name", null: false
+    t.string "url", null: false
   end
 
   create_table "users", force: :cascade do |t|
