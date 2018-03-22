@@ -7,7 +7,7 @@ const SeqGrid = props =>{
   var noteNames
   if (props.noteNames) {
       noteNames = props.noteNames.map((note, i) =>
-      <li key={`note-${note}${i}`}>{note}</li>
+      <div className='note-name' key={`note-${note}${i}`}>{note}</div>
     ).reverse()
   }
 
@@ -24,30 +24,35 @@ const SeqGrid = props =>{
         [1,1,1,1,1,1,1,1]
       ]
     }
+    
 
   return(
-    <div className="row">
-      <ul className="notes">
+    <div className="flex row">
+      <div className="notes large-2 medium-2 small-2 column">
         {noteNames}
-      </ul>
+      </div>
 
-      <div className="flex grid">
+      <div className="flex grid large-10 medium-10 small-2 column">
         {pattern.map((step, stepIndex) =>
           <div
             key={`step-${stepIndex}`}
             className={classNames('step', { active: stepIndex === props.currentStep })}>
             {step.map((cell, i) => {
               let handler = () => props.toggleCell(stepIndex, i)
-              return(
-                <SeqCell
-                  key={`step${stepIndex}-cell-${i}`}
-                  handler={handler}
-                  classNames={classNames('cell', {
-                    active: stepIndex == props.currentStep,
-                    on: cell === 1
-                  })}
-                />
-              )
+              if (cell.type == "div"){
+                return cell
+              } else{
+                return(
+                  <SeqCell
+                    key={`step${stepIndex}-cell-${i}`}
+                    handler={handler}
+                    classNames={classNames('cell', {
+                      active: stepIndex == props.currentStep,
+                      on: cell === 1
+                    })}
+                  />
+                )
+              }
             })}
           </div>
         )}

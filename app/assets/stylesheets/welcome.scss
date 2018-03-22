@@ -49,13 +49,15 @@ h1 {
 
 .notes {
   list-style-type: none;
-  position: absolute;
-  left: -100px;
   top: 70px;
-  text-align: right;
+  text-align: left;
   color: white;
-  line-height: 60px;
+  line-height: 50px;
   opacity: 0.3;
+}
+
+.note-name {
+  padding-top: 10px;
 }
 
 .buttons {
