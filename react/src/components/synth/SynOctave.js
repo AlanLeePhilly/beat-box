@@ -6,7 +6,7 @@ const SynOctave = props =>{
 
 let octArr = OCTAVE.map((o, i) => <option key={i}>{o}</option>)
   return(
-    <div className="select-wrapper">
+    <div className="button-wrapper">
       <span>Octave</span>
       <select
         name="octave"

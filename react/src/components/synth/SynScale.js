@@ -6,7 +6,7 @@ const SynScale = props =>{
 
 
   return(
-    <div className="select-wrapper">
+    <div className="button-wrapper">
       <span>Scale</span>
       <select
         name="scale"

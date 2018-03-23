@@ -91,9 +91,11 @@ class SynthfulContainer extends React.Component {
   render() {
     return(
       <div className="seq-button buttons row">
-        <button onClick={ () => { this.setFreqs() } }>
-          Update
-        </button>
+        <div className='button-wrapper'>
+          <button onClick={ () => { this.setFreqs() } }>
+            Update
+          </button>
+        </div>
         <SynPlay
           play={this.onPlay}
           isPlaying={this.props.playing}

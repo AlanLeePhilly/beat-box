@@ -6,7 +6,7 @@ const SamKitSelector = props =>{
 
 
   return(
-    <div className="select-wrapper">
+    <div className="button-wrapper">
       <span>Kit</span>
       <select
         name="kitName"

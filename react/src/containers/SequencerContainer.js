@@ -14,8 +14,8 @@ class SequencerContainer extends React.Component {
   constructor(props) {
     super(props);
     this.setPattern = this.setPattern.bind(this)
+    this.toggleCell = this.toggleCell.bind(this)
     }
-  
   
   componentDidMount(){
     this.props.fetchPatterns()
@@ -26,8 +26,7 @@ class SequencerContainer extends React.Component {
       if (pattern.name == patName) {
         this.props.setPattern(pattern)
       }
-    })
-    
+    })  
   }
 
   clearPattern(){
@@ -53,16 +52,17 @@ class SequencerContainer extends React.Component {
   }
 
   toggleCell(step, cell) {
-    let clonedPattern = this.props.pattern.grid.slice(0);
-    let cellState = clonedPattern[step][cell];
-    clonedPattern[step][cell] = cellState === 1 ? 0 : 1;
+    let clonedPattern = {}
+    Object.assign(clonedPattern, this.props.pattern)
+    let cellState = clonedPattern['grid'][step][cell];
+    clonedPattern['grid'][step][cell] = cellState === 1 ? 0 : 1;
     this.props.setPattern(clonedPattern)
   }
 
   render(){
     return (
       <div>
-        <div className="select-wrapper seq-button buttons row">
+        <div className="button-wrapper seq-button buttons row">
           <SeqBpm
             setBpm={this.props.setBpm}
             bpm={this.props.bpm}

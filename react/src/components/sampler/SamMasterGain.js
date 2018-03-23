@@ -6,7 +6,7 @@ const SamMasterGain = props =>{
 
 
   return(
-    <div className="select-wrapper">
+    <div className="button-wrapper">
       <span>Volume</span>
       <select
         name="masterGain"

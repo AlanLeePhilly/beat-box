@@ -83,7 +83,7 @@ body {
     }
   }
 
-  .select-wrapper {
+  .button-wrapper {
     position: relative;
     display: flex;
     background-color: lighten(black, 15%);
@@ -91,11 +91,11 @@ body {
     span {
       position: absolute;
       color: black;
-      top: -10px;
-      left: 8px;
-      font-size: 9px;
+      top: -12px;
+      left: 10px;
+      text-align: center;
+      font-size: 10px;
       letter-spacing: 1px;
-      opacity: 0.7;
     }
   }
 

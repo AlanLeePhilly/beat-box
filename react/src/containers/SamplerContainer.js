@@ -68,7 +68,7 @@ class SamplerContainer extends React.Component {
   }
 
   finishedLoading() {
-    let stepPattern = this.props.pattern[this.props.currentStep]
+    let stepPattern = this.props.pattern.grid[this.props.currentStep]
     let bufferList = this.state.bufferList.map((freq, i) =>
       stepPattern[i] === 1 ? freq : null
     ).filter(x => x)
@@ -95,9 +95,11 @@ class SamplerContainer extends React.Component {
   render() {
     return(
       <div className="seq-button buttons row">
-        <button onClick={ () => { this.loadSamples() } }>
-          LoadKit
-        </button>
+        <div className='button-wrapper'>  
+          <button onClick={ () => { this.loadSamples() } }>
+            LoadKit
+          </button>
+        </div>
         <SamPlay
           play={this.onPlay}
           isPlaying={this.props.playing}

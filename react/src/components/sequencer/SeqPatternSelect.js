@@ -5,7 +5,7 @@ const SeqPatternSelect = props =>{
   let patternOptions = props.patterns.map((p, i) => <option key={i}>{p.name}</option>)
 
   return(
-    <div className="select-wrapper">
+    <div className="button-wrapper">
       <span>Kit</span>
       <select
         name="pattern"

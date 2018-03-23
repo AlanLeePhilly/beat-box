@@ -2,7 +2,7 @@ import React from 'react';
 
 const SeqClear = props =>{
   return(
-    <div className="select-wrapper clear">
+    <div className="button-wrapper clear">
       <button onClick={ () => {props.clearPattern() }}>
         Clear
       </button>

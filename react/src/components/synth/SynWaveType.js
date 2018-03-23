@@ -6,7 +6,7 @@ const SynWaveType = props =>{
 
 
   return(
-    <div className="select-wrapper">
+    <div className="button-wrapper">
       <span>Wave Type</span>
       <select
         name="type"

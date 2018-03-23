@@ -2,7 +2,7 @@ import React from 'react';
 
 const SeqBpm = props =>{
   return(
-    <div className="select-wrapper bpm">
+    <div className="button-wrapper bpm">
       <input
         name="bpm"
         type="number"

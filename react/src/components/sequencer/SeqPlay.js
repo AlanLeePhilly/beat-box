@@ -2,11 +2,13 @@ import React from 'react';
 
 const SeqPlay = props =>{
   return(
-    <button
-      className={props.isPlaying ? 'active' : ''}
-      onClick={() => { props.isPlaying? props.pause() : props.play() }}>
-      Play
-    </button>
+    <div className='button-wrapper'>
+      <button
+        className={props.isPlaying ? 'active' : ''}
+        onClick={() => { props.isPlaying? props.pause() : props.play() }}>
+        Play
+      </button>
+    </div>
   )
 }
 

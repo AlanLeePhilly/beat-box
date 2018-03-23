@@ -6,7 +6,7 @@ const SynRootNote = props =>{
   let rootArr = ROOTNOTES.map((r, i) => <option key={i}>{r}</option>)
 
   return(
-    <div className="select-wrapper">
+    <div className="button-wrapper">
       <span>Root Note</span>
       <select
         name="rootNote"

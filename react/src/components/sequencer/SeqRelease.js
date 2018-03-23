@@ -2,7 +2,7 @@ import React from 'react';
 
 const SeqRelease = props =>{
   return(
-    <div className="select-wrapper release">
+    <div className="button-wrapper release">
       <input
         name="release"
         type="number"

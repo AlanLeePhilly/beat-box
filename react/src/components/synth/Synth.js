@@ -17,7 +17,7 @@ const Synth = props =>{
     <div className="buttons">
 
 
-      <div className="select-wrapper">
+      <div className="button-wrapper">
         <span>Root Note</span>
         <select
           name="rootNote"
@@ -31,7 +31,7 @@ const Synth = props =>{
         </select>
       </div>
 
-      <div className="select-wrapper">
+      <div className="button-wrapper">
         <span>Octave</span>
         <select
           name="octave"
@@ -45,7 +45,7 @@ const Synth = props =>{
         </select>
       </div>
 
-      <div className="select-wrapper">
+      <div className="button-wrapper">
         <span>Scale</span>
         <select
           name="scale"
@@ -59,7 +59,7 @@ const Synth = props =>{
         </select>
       </div>
 
-      <div className="select-wrapper">
+      <div className="button-wrapper">
         <span>Wave</span>
         <select
           name="type"
@@ -73,7 +73,7 @@ const Synth = props =>{
         </select>
       </div>
 
-      <div className="select-wrapper">
+      <div className="button-wrapper">
         <span>Volume</span>
         <select
           name="masterGain"
