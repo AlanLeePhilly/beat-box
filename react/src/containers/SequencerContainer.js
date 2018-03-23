@@ -1,18 +1,37 @@
 import React, { PropTypes, Component } from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux'
-import { play, pause, setPattern, setBpm, setCurrentStep, setSteps, setNoteNames, setRelease, setDevice} from '../actions/sequencerAdjust'
+import { play, pause, setBpm, setCurrentStep, setSteps, setNoteNames, setRelease, setDevice, setPattern, fetchPatterns} from '../actions/sequencerAdjust'
 import SeqPlay from '../components/sequencer/SeqPlay';
 import SeqBpm from '../components/sequencer/SeqBpm';
 import SeqRelease from '../components/sequencer/SeqRelease';
 import SeqClear from '../components/sequencer/SeqClear';
 import SeqGrid from '../components/sequencer/SeqGrid';
+import SeqPatternSelect from '../components/sequencer/SeqPatternSelect'
 import { bindActionCreators } from 'redux'
 
-const SequencerContainer = props => {
+class SequencerContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.setPattern = this.setPattern.bind(this)
+    }
+  
+  
+  componentDidMount(){
+    this.props.fetchPatterns()
+  }
 
-  function clearPattern() {
-    props.setPattern([
+  setPattern(patName){
+    this.props.patterns.forEach( pattern => {
+      if (pattern.name == patName) {
+        this.props.setPattern(pattern)
+      }
+    })
+    
+  }
+
+  clearPattern(){
+    this.props.setPattern([
       [0,0,0,0,0,0,0,0],
       [0,0,0,0,0,0,0,0],
       [0,0,0,0,0,0,0,0],
@@ -24,54 +43,56 @@ const SequencerContainer = props => {
     ])
   }
 
-  var play = () => {
-    if (props.playing) {
-      props.pause()
+  play(){
+    if (this.props.playing) {
+      this.props.pause()
     }
     else {
-      props.play(props.bpm, props.steps)
+      this.props.play(this.props.bpm, this.props.steps)
     }
   }
 
-  function toggleCell(step, cell) {
-    var clonedPattern = props.pattern.slice(0);
-    var cellState = clonedPattern[step][cell];
+  toggleCell(step, cell) {
+    let clonedPattern = this.props.pattern.grid.slice(0);
+    let cellState = clonedPattern[step][cell];
     clonedPattern[step][cell] = cellState === 1 ? 0 : 1;
-    props.setPattern(clonedPattern)
+    this.props.setPattern(clonedPattern)
   }
 
+  render(){
     return (
       <div>
-        <div className="seq-button buttons row">
-          {/* <SeqPlay
-            play={play}
-            pause={props.pause}
-            isPlaying={props.playing}
-          /> */}
-
+        <div className="select-wrapper seq-button buttons row">
           <SeqBpm
-            setBpm={props.setBpm}
-            bpm={props.bpm}
+            setBpm={this.props.setBpm}
+            bpm={this.props.bpm}
           />
 
           <SeqRelease
-            setRelease={props.setRelease}
-            release={props.release}
+            setRelease={this.props.setRelease}
+            release={this.props.release}
           />
 
           <SeqClear
-            clearPattern={clearPattern}
+            clearPattern={this.clearPattern}
+          />
+          
+          <SeqPatternSelect
+            setPattern={this.setPattern}
+            pattern={this.props.pattern}
+            patterns={this.props.patterns}
           />
         </div>
 
         <SeqGrid
-          pattern={props.pattern}
-          currentStep={props.currentStep}
-          toggleCell={toggleCell}
-          noteNames={props.noteNames}
+          pattern={this.props.pattern}
+          currentStep={this.props.currentStep}
+          toggleCell={this.toggleCell}
+          noteNames={this.props.noteNames}
         />
       </div>
     )
+  }
 
 }
 
@@ -79,6 +100,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     play: (bpm, steps) => dispatch(play(bpm, steps)),
     pause: () => dispatch(pause()),
+    fetchPatterns: () => dispatch(fetchPatterns()),
     setPattern: (pattern) => dispatch(setPattern(pattern)),
     setBpm: (bpm) => dispatch(setBpm(bpm)),
     setRelease: (num) => dispatch(setRelease(num)),
@@ -92,13 +114,16 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     pattern: state.sequencer.pattern,
+    patterns: state.sequencer.patterns,
     playing: state.sequencer.playing,
     bpm: state.sequencer.bpm,
     steps: state.sequencer.steps,
     currentStep: state.sequencer.currentStep,
     noteNames: state.sequencer.noteNames,
     release: state.sequencer.release,
-    device: state.sequencer.device
+    device: state.sequencer.device,
+    loading: state.sequencer.loading,
+    error: state.sequencer.error
   }
 }
 

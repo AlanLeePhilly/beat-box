@@ -7,7 +7,6 @@ const SynMasterGain = props =>{
 
   return(
     <div className="select-wrapper">
-      <span>Volume</span>
       <select
         name="masterGain"
         value={props.masterGain * 10}
@@ -17,7 +16,8 @@ const SynMasterGain = props =>{
         data-label="masterGain"
         className="masterGain">
         {gainArr}
-      </select>
+      </select><br/>
+      <span>Volume</span>
     </div>
   )
 }

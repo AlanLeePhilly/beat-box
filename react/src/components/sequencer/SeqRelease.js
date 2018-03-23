@@ -3,7 +3,6 @@ import React from 'react';
 const SeqRelease = props =>{
   return(
     <div className="select-wrapper release">
-      <span>Release</span>
       <input
         name="release"
         type="number"
@@ -14,6 +13,7 @@ const SeqRelease = props =>{
         onChange={(e) => {
           props.setRelease(parseInt(e.target.value))
         }} />
+        <span>Release</span>
     </div>
   )
 }

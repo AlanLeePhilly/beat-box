@@ -13,8 +13,8 @@ body {
   background: $dark;
   background-color: black;
   font-family: 'Helvetica Neue';
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   height: 100vh;
   padding-top: 1em;
   text-align: center;
@@ -26,17 +26,19 @@ body {
 }
 .flex {
   display: flex;
-  flex-direction: row;
+  // flex-direction: row;
 }
 
-h1 {
-  margin-top: 0;
-  color: $primary;
-  opacity: 0.5;
-  font-weight: lighter;
-  letter-spacing: 2px;
-  font-size: 4em;
+.page-title{
+  margin-top: -55px;
+  margin-bottom: 20px;
+  color: darken($primary, 15%);
+  
+  font-weight: normal;
+  letter-spacing: 5px;
+  font-size: 2em;
   font-family: sans-serif;
+  text-align: right;
 }
 
 .Sequencer {
@@ -56,9 +58,7 @@ h1 {
   opacity: 0.3;
 }
 
-.note-name {
-  padding-top: 10px;
-}
+
 
 .buttons {
   display: flex;
@@ -86,15 +86,16 @@ h1 {
   .select-wrapper {
     position: relative;
     display: flex;
+    background-color: lighten(black, 15%);
 
     span {
       position: absolute;
-      color: white;
+      color: black;
       top: -10px;
       left: 8px;
       font-size: 9px;
       letter-spacing: 1px;
-      opacity: 0.3;
+      opacity: 0.7;
     }
   }
 
@@ -137,6 +138,22 @@ h1 {
     &.on {
       background: $primary!important;
       box-shadow: 0 3px 10px 0 rgba($primary, 0.8);
+    }
+    &.note-name {
+      text-align: center;
+
+      line-height: 50px;
+      color: $primary;
+      font-weight: lighter;
+      width: 175px;
+      background: black;
+      -webkit-box-shadow:inset 0px 0px 0px 4px $dark;
+      -moz-box-shadow:inset 0px 0px 0px 4px $dark;
+      box-shadow:inset 0px 0px 0px 6px $dark;
+      
+      // border-color: gray;
+
+
     }
   }
 }

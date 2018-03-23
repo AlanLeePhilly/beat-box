@@ -1,5 +1,5 @@
 const initialState = {
-  kitName: 'none'
+  kitName: 'acoustic-kit'
 }
 
 export default function sampler(state = initialState, action) {

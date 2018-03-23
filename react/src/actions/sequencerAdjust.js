@@ -1,5 +1,6 @@
-let timer = null;
-let currStep = 0;
+export const FETCH_PATTERNS_BEGIN   = 'FETCH_PATTERNS_BEGIN';
+export const FETCH_PATTERNS_SUCCESS = 'FETCH_PATTERNS_SUCCESS';
+export const FETCH_PATTERNS_FAILURE = 'FETCH_PATTERNS_FAILURE';
 
 export const setPattern = (pattern) => ({
   type: 'SET_PATTERN',
@@ -11,22 +12,6 @@ export const setBpm = (bpm) => ({
   bpm: bpm
 })
 
-// export const play = (bpm, totalSteps) => (dispatch) => {
-//  clearInterval(timer);
-//   timer = setInterval(() => {
-//     if (currStep > totalSteps - 2){
-//        currStep = 0
-//     } else {
-//        currStep = currStep + 1
-//      }
-//     dispatch(setCurrentStep(currStep))
-//   }, 60000 / (bpm * 2));
-//
-//   dispatch({
-//     type: 'PLAY',
-//     playing: true
-//   });
-// }
 
 export const play = () => ({
   type: 'PLAY',
@@ -34,8 +19,6 @@ export const play = () => ({
 })
 
 export const pause = () => (dispatch) => {
-  // clearInterval(timer);
-  // currStep = 0;
   dispatch(setCurrentStep(0))
   dispatch({
     type: 'PAUSE',
@@ -69,3 +52,37 @@ export const setDevice = (device) => ({
   type: 'SET_DEVICE',
   device: device
 })
+
+export const fetchPatternsBegin = () => ({
+  type: FETCH_PATTERNS_BEGIN
+});
+
+export const fetchPatternsSuccess = patterns => ({
+  type: FETCH_PATTERNS_SUCCESS,
+  payload: { patterns }
+})
+
+export const fetchPatternsError = error => ({
+  type: FETCH_PATTERNS_FAILURE,
+  payload: { error }
+})
+
+export const fetchPatterns = () => (dispatch) => {
+    dispatch(fetchPatternsBegin());
+    fetch('/api/v1/patterns')
+      .then(handleErrors)
+      .then(res => res.json())
+      .then(json => {
+        dispatch(fetchPatternsSuccess(json.patterns));
+        json.patterns;
+      })
+      .catch(error => dispatch(fetchPatternsFailure(error)));
+  }
+
+
+function handleErrors(response) {
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  return response;
+}

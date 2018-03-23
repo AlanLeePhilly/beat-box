@@ -1,53 +1,35 @@
 import React from 'react';
 import classNames from 'classnames';
 import SeqCell from './SeqCell'
+import SeqLabel from './SeqLabel'
 
 const SeqGrid = props =>{
-
-  var noteNames
-  if (props.noteNames) {
-      noteNames = props.noteNames.map((note, i) =>
-      <div className='note-name' key={`note-${note}${i}`}>{note}</div>
-    ).reverse()
-  }
-
-  var pattern = props.pattern
-    if (!pattern) {
-      pattern = [
-        [1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1]
-      ]
-    }
-    
+  let pattern = props.pattern.grid.slice(0)    
+  pattern.unshift(props.noteNames)
 
   return(
     <div className="flex row">
-      <div className="notes large-2 medium-2 small-2 column">
-        {noteNames}
-      </div>
-
       <div className="flex grid large-10 medium-10 small-2 column">
         {pattern.map((step, stepIndex) =>
           <div
             key={`step-${stepIndex}`}
             className={classNames('step', { active: stepIndex === props.currentStep })}>
             {step.map((cell, i) => {
-              let handler = () => props.toggleCell(stepIndex, i)
-              if (cell.type == "div"){
-                return cell
+              let handler = () => props.toggleCell(stepIndex-1, i)
+              if (typeof cell == "string"){
+                return (
+                  <SeqLabel 
+                  key={`seqLabel-${i}`}
+                  value={cell}
+                  />
+                )
               } else{
                 return(
                   <SeqCell
-                    key={`step${stepIndex}-cell-${i}`}
+                    key={`step${stepIndex-1}-cell-${i}`}
                     handler={handler}
                     classNames={classNames('cell', {
-                      active: stepIndex == props.currentStep,
+                      active: stepIndex-1 == props.currentStep,
                       on: cell === 1
                     })}
                   />
@@ -61,25 +43,3 @@ const SeqGrid = props =>{
 
 )}
 export default SeqGrid;
-
-
-{/* <div className="flex grid">
-  {pattern.map((step, stepIndex) =>
-    <div
-      key={`step-${stepIndex}`}
-      className={classNames('pattern', {
-        active: stepIndex === props.currentStep,
-      })}>
-      {step.map((cell, i) =>
-        <div
-          key={`step${stepIndex}-cell-${i}`}
-          onClick={props.toggleCell(stepIndex, i) }
-          className={classNames('cell', {
-            active: stepIndex == props.currentStep,
-            on: cell === 1
-          })}>
-        </div>
-      )}
-    </div>
-  )}
-</div> */}
