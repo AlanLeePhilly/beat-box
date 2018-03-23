@@ -1,7 +1,7 @@
 const initialState = {
   rootNote: 'C',
   octave: 4,
-  scale: 'chromatic',
+  scale: 'minorPent',
   freqs: [],
   waveType: 'sine',
   masterGain: 1

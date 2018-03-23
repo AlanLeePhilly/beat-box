@@ -1,17 +1,22 @@
 const initialState = {
-  kitName: 'acoustic-kit'
+  kitName: 'acoustic-kit',
+  loaded: false
 }
 
 export default function sampler(state = initialState, action) {
   switch (action.type) {
     case 'SET_KITNAME':
-    return Object.assign({}, state, {
-      kitName: action.kitName
-    })
+      return Object.assign({}, state, {
+        kitName: action.kitName
+      })
     case 'SET_BUFFERLIST':
-    return Object.assign({}, state, {
-      bufferList: action.bufferList
-    })
+      return Object.assign({}, state, {
+        bufferList: action.bufferList
+      })
+    case 'SET_LOADED':
+      return Object.assign({}, state, {
+        loaded: action.loaded
+      })
     default:
       return state
   }

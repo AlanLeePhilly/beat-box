@@ -20,6 +20,10 @@ body {
   text-align: center;
 }
 
+#scope{
+  text-align: right;
+}
+
 .specs {
    width: 400;
   height: 200;
@@ -30,7 +34,7 @@ body {
 }
 
 .page-title{
-  margin-top: -55px;
+  // margin-top: -55px;
   margin-bottom: 20px;
   color: darken($primary, 15%);
   
@@ -141,10 +145,11 @@ body {
     }
     &.note-name {
       text-align: center;
-
+      font-family: monospace;
+      font-weight: bolder;
       line-height: 50px;
       color: $primary;
-      font-weight: lighter;
+
       width: 175px;
       background: black;
       -webkit-box-shadow:inset 0px 0px 0px 4px $dark;

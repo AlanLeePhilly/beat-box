@@ -32,16 +32,21 @@ class Dashboard extends React.Component {
     
     return(
       <div className="Sequence-container Sequencer grid">
-        <div className="column medium-2">
-          <DeviceToggle 
-            device={this.props.device}
-            handler={this.handleChange}
-          />
+        <div className='row'>
+          <div className="column medium-2">
+            <DeviceToggle 
+              device={this.props.device}
+              handler={this.handleChange}
+            />
+          </div>
+          
+          <div className="column medium-10">
+            <div className="page-title">Sequencial Sounds</div>
+          </div>
         </div>
-        <div className="column medium-8">
-          <div className="page-title">Sequencial Sounds</div>
-        </div>
+        
         {selectedDevice}
+        
         <SequencerContainer />
       </div>
     )

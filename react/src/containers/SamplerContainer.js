@@ -84,8 +84,10 @@ class SamplerContainer extends React.Component {
       sourceArr[i].connect(gainArr[i]);
       gainArr[i].connect(masterGain);
     }
+    let analyser = this.props.ctx.createAnalyser()
     
-    masterGain.connect(this.props.ctx.destination)
+    masterGain.connect(analyser)
+    analyser.connect(this.props.ctx.destination)
 
     setTimeout(() => {
       masterGain.gain.setTargetAtTime(0, this.props.ctx.currentTime, 0.015);
@@ -170,7 +172,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(SamplerContainer);
 //           handleChange={handleChange}
 //           play={play}
 //         />
-//         <canvas id='scope' className='specs'></canvas>
 //
 //         <Oscilloscope
 //         audioContext={audioContext}

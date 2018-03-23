@@ -8,6 +8,7 @@ import SeqRelease from '../components/sequencer/SeqRelease';
 import SeqClear from '../components/sequencer/SeqClear';
 import SeqGrid from '../components/sequencer/SeqGrid';
 import SeqPatternSelect from '../components/sequencer/SeqPatternSelect'
+import Oscilloscope from '../components/Oscilloscope'
 import { bindActionCreators } from 'redux'
 
 class SequencerContainer extends React.Component {
@@ -82,8 +83,10 @@ class SequencerContainer extends React.Component {
             pattern={this.props.pattern}
             patterns={this.props.patterns}
           />
+          
         </div>
-
+        
+        
         <SeqGrid
           pattern={this.props.pattern}
           currentStep={this.props.currentStep}
