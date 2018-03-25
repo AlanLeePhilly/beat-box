@@ -1,5 +1,4 @@
-class Api::V1::PatternsController < ApplicationController
-  
+class Api::V1::PatternsController < ApplicationController  
   def index
     render json: { patterns: Pattern.all}
   end
@@ -14,7 +13,6 @@ class Api::V1::PatternsController < ApplicationController
   end
   
   private
-  
   def pattern_params
     params.require(:pattern).permit(:user_id, :name, :grid, :device)
   end
