@@ -9,11 +9,17 @@ class Api::V1::PatternsController < ApplicationController
   
   def create
     pattern = Pattern.new(pattern_params)
-    pattern.save
+    pattern.grid = params['pattern']['grid']
+    pattern.user = current_user
+    if pattern.save
+      render json: { pattern: pattern }
+    else
+      render json: { errors: pattern.errors.full_messages }
+    end
   end
   
   private
   def pattern_params
-    params.require(:pattern).permit(:user_id, :name, :grid, :device)
+    params.require(:pattern).permit(:user_id, :name, :device)
   end
 end
