@@ -1,9 +1,9 @@
-class SamplesController < ApplicationController
+class Api::V1::SamplesController < ApplicationController
   def index
-    render json: { samples: Samples.all}
+    render json: { samples: Sample.all}
   end
   
   def show
-    render json: { sample: Samples.find(params[:id]) }
+    render json: { sample: Sample.find(params[:id]) }
   end
 end

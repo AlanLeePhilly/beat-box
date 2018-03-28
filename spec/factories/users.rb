@@ -1,12 +1,12 @@
 FactoryBot.define do
   factory :user do
-    provider 'MyString'
-    uid 'MyString'
-    first_name 'MyString'
-    last_name 'MyString'
-    email 'MyString'
-    token 'MyString'
-    refresh_token 'MyString'
-    oauth_expires_at '2017-12-21 14:40:25'
+    provider 'MyProvider'
+    uid 'MyUID'
+    first_name 'MyFirstName'
+    last_name 'MyLastName'
+    email 'MyEmail'
+    token 'MyToken'
+    refresh_token 'MyRefreshToken'
+    oauth_expires_at '2018-12-21 14:40:25'
   end
 end

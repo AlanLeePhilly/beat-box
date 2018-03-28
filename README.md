@@ -10,7 +10,15 @@ Dependencies
 
 Deployment instructions
 
+    rake db:create && rake db:migrate && rake db:seed
     npm install && npm start
     bundle install && bundle exec rails s
     http://localhost:3000/ 
+
+Todos:
+* Change Volume to display knob
+* Put Oscilloscope in seperate module
+* Add Controls to Oscilloscope module
+* Convert SamPlay & loader to one button
+* Convert SynPlay & updater to one button
 
