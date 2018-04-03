@@ -11,8 +11,10 @@ const SynRootNote = props =>{
       <select
         name="rootNote"
         value={props.rootNote}
+        onClick={props.pause}
         onChange={(e) => {
           props.setRootNote(e.target.value)
+          props.pause()
         }}
         data-label="rootNote"
         className="rootNote">

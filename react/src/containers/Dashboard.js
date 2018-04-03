@@ -1,11 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux'
+
 import SequencerContainer from './SequencerContainer'
 import SynthfulContainer from './SynthfulContainer'
 import SamplerContainer from './SamplerContainer'
-import {setDevice} from '../actions/sequencerAdjust'
-import { DEVICE_LIST } from '../constants/Constants'
+
+import {setDevice, setPattern} from '../actions/sequencerAdjust'
+import { setSpectrum, setOscilloscope } from '../actions/visualizerAdjust'
+
+import VisualizerSwitches from '../components/dashboard/VisualizerSwitches'
 import DeviceToggle from '../components/dashboard/DeviceToggle';
+import SeqGrid from '../components/sequencer/SeqGrid';
+import { DEVICE_LIST } from '../constants/Constants';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -30,19 +36,49 @@ class Dashboard extends React.Component {
                       />
     }
     
+    let setSpectrum = () => {
+      console.log(this.props.seeSpectrum)
+      this.props.setSpectrum(!this.props.seeSpectrum)
+    }
+    
+    let setOscilloscope = () => {
+      this.props.setOscilloscope(!this.props.seeOscilloscope)
+    }
+    
+    
     return(
-      <div className="Sequence-container Sequencer grid">
+      <div className="Dashboard Sequencer grid">
+        <div className="row">
+          <div className="page-title">Beat Box</div>
+        </div>
+        
+        <SeqGrid
+          pattern={this.props.pattern}
+          currentStep={this.props.currentStep}
+          setPattern={this.props.setPattern}
+          noteNames={this.props.noteNames}
+        />
+        
+        
         <div className='row'>
-          <div className="column medium-2">
-            <DeviceToggle 
-              device={this.props.device}
-              handler={this.handleChange}
+          <div className="column medium-4">
+              Device:
+              <DeviceToggle 
+                device={this.props.device}
+                handler={this.handleChange}
+              />
+          </div>
+          
+          <div className="column medium-4">
+            Visualizers:
+            <VisualizerSwitches 
+              seeOscilloscope={this.props.seeOscilloscope}
+              setOscilloscope={this.props.setOscilloscope}
+              seeSpectrum={this.props.seeSpectrum}
+              setSpectrum={this.props.setSpectrum}        
             />
           </div>
           
-          <div className="column medium-10">
-            <div className="page-title">Sequencial Sounds</div>
-          </div>
         </div>
         
         {selectedDevice}
@@ -55,13 +91,21 @@ class Dashboard extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setDevice: (name) => dispatch(setDevice(name))
+    setDevice: (name) => dispatch(setDevice(name)),
+    setSpectrum: (bool) => dispatch(setSpectrum(bool)),
+    setOscilloscope: (bool) => dispatch(setOscilloscope(bool)),
+    setPattern: (pattern) => dispatch(setPattern(pattern))    
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    device: state.sequencer.device
+    device: state.sequencer.device,
+    seeSpectrum: state.visualizer.seeSpectrum,
+    seeOscilloscope: state.visualizer.seeOscilloscope,
+    pattern: state.sequencer.pattern,
+    currentStep: state.sequencer.currentStep,
+    noteNames: state.sequencer.noteNames
   }
 }
 

@@ -7,3 +7,8 @@ export const setBufferList = (bufferList) => ({
   type: 'SET_BUFFERLIST',
   bufferList: bufferList
 })
+
+export const setLoaded = (loaded) => ({
+  type: 'SET_LOADED',
+  loaded: loaded
+})

@@ -7,6 +7,14 @@ const SeqGrid = props =>{
   let pattern = props.pattern.grid.slice(0)    
   pattern.unshift(props.noteNames)
 
+  function toggleCell(step, cell) {
+    let clonedPattern = {}
+    Object.assign(clonedPattern, props.pattern)
+    let cellState = clonedPattern['grid'][step][cell];
+    clonedPattern['grid'][step][cell] = cellState === 1 ? 0 : 1;
+    props.setPattern(clonedPattern)
+  }
+
   return(
     <div className="flex row">
       <div className="flex grid large-10 medium-10 small-2 column">
@@ -15,7 +23,7 @@ const SeqGrid = props =>{
             key={`step-${stepIndex}`}
             className={classNames('step', { active: stepIndex === props.currentStep })}>
             {step.map((cell, i) => {
-              let handler = () => props.toggleCell(stepIndex-1, i)
+              let handler = () => toggleCell(stepIndex-1, i)
               if (typeof cell == "string"){
                 return (
                   <SeqLabel 

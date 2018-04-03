@@ -9,7 +9,8 @@ import SynScale from '../components/synth/SynScale'
 import SynWaveType from '../components/synth/SynWaveType'
 import SynMasterGain from '../components/synth/SynMasterGain'
 import SynPlay from '../components/synth/SynPlay'
-import Oscilloscope from '../components/Oscilloscope'
+import Oscilloscope from '../components/visualizer/Oscilloscope'
+import Spectrum from '../components/visualizer/Spectrum'
 
 class SynthfulContainer extends React.Component {
   constructor(props) {
@@ -19,18 +20,23 @@ class SynthfulContainer extends React.Component {
       interval: null
     }
     this.onPlay = this.onPlay.bind(this)
-    this.playNotes = this.playNotes.bind(this)
+    this.makeSound = this.makeSound.bind(this)
     this.setFreqs = this.setFreqs.bind(this)
+    this.pause = this.pause.bind(this)
   }
 
   componentDidMount(){
     this.setFreqs()
   }
+  
+  componentWillUnmount(){
+    this.pause()
+  }
 
-  setFreqs(){
-    let rootNote = ROOTNOTES.indexOf(this.props.rootNote)
-    let rootIndex = rootNote + (this.props.octave * 12);
-    let indexArr = SCALESTEPS[this.props.scale].map((x, i) => { return x + rootIndex })
+  setFreqs({ rootNote, octave, scale} = this.props){
+    let rootNoteIndx = ROOTNOTES.indexOf(rootNote)
+    let rootIndex = rootNoteIndx + (octave * 12);
+    let indexArr = SCALESTEPS[scale].map((x, i) => { return x + rootIndex })
     let noteNames = indexArr.map(val => { return Object.keys(NOTEFREQS)[val] })
     let noteFreqs = indexArr.map(val => { return Object.values(NOTEFREQS)[val] })
     this.props.setNoteNames(noteNames)
@@ -39,27 +45,24 @@ class SynthfulContainer extends React.Component {
 
   onPlay(){
     if (this.props.playing){
-      clearInterval(this.interval)
-      this.props.pause()
+      this.pause()
     } else {
       this.props.play()
-      this.playNotes()
+      this.makeSound()
       this.interval = setInterval(() => {
         this.props.nextStep()
-        // var next = this.this.props.data.pattern[this.this.props.data.currentStep]
-        // var seqData = this.this.props.data
-        this.playNotes();
+        this.makeSound();
       }, ((60 * 500) / this.props.bpm));
     }
   }
 
-  // function onPause(){
-  //   debugger
-  //   clearInterval(interval)
-  //   this.props.pause()
-  // }
+  pause(){
+    clearInterval(this.interval)
+    this.props.pause()
+    this.setFreqs()
+  }
 
-  playNotes(){
+  makeSound(){
     let stepPattern = this.props.pattern.grid[this.props.currentStep]
     let freqArr = this.props.freqs.map((freq, i) =>
       stepPattern[i] === 1 ? freq : null
@@ -89,14 +92,41 @@ class SynthfulContainer extends React.Component {
     }, parseInt(this.props.release));
   }
 
+  
+
   render() {
+    let selectedVisualizers = []
+    if (this.props.seeSpectrum){
+      selectedVisualizers.push(
+        <div className='spectrum'>
+          <canvas id='spec' className='specs'></canvas>
+          <Spectrum
+            audioContext={this.props.ctx}
+            analyser={this.analyser}
+          />
+        </div>
+      )
+    }
+    if (this.props.seeOscilloscope){
+      selectedVisualizers.push(
+        <div className='oscilloscope'>
+          <canvas id='scope' className='specs'></canvas>
+          <Oscilloscope
+            audioContext={this.props.ctx}
+            analyser={this.analyser}
+          />
+        </div>
+      )
+    }
+    
+    
     return(
       <div className='row '>
         <div className="seq-button buttons column 8">
           <div className='button-wrapper'>
-            <button onClick={ () => { this.setFreqs() } }>
+            {/* <button onClick={ () => { this.setFreqs() } }>
               Update
-            </button>
+            </button> */}
           </div>
           <SynPlay
             play={this.onPlay}
@@ -105,38 +135,35 @@ class SynthfulContainer extends React.Component {
           <SynRootNote
             rootNote={this.props.rootNote}
             setRootNote={this.props.setRootNote}
-            // setFreqs={this.setFreqs}
+            pause={this.pause}
           />
 
           <SynOctave
             octave={this.props.octave}
             setOctave={this.props.setOctave}
-            // setFreqs={this.setFreqs}
+            pause={this.pause}
           />
 
           <SynScale
             scale={this.props.scale}
             setScale={this.props.setScale}
-            // setFreqs={this.setFreqs}
+            pause={this.pause}
           />
 
           <SynWaveType
             waveType={this.props.waveType}
             setWaveType={this.props.setWaveType}
+            pause={this.pause}
           />
 
           <SynMasterGain
             masterGain={this.props.masterGain}
             setMasterGain={this.props.setMasterGain}
+            pause={this.pause}
           />
         </div>
-        <div className='oscilloscope column small-4'>
-          <Oscilloscope 
-            audioContext={this.props.ctx}
-            analyser={this.analyser}
-          />
-          
-          <canvas id='scope' className='specs'></canvas>
+        <div className='visualizers row'>
+          {selectedVisualizers}
         </div>
       </div>
     )
@@ -171,7 +198,9 @@ const mapStateToProps = (state) => {
     rootNote: state.synth.rootNote,
     octave: state.synth.octave,
     scale: state.synth.scale,
-    bpm: state.sequencer.bpm
+    bpm: state.sequencer.bpm,
+    seeSpectrum: state.visualizer.seeSpectrum,
+    seeOscilloscope: state.visualizer.seeOscilloscope
   }
 }
 
