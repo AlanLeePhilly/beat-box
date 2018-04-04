@@ -34,12 +34,12 @@ body {
 }
 
 .page-title{
-  // margin-top: -55px;
-  margin-bottom: 20px;
+  margin-left: 24px;
+  margin-bottom: 5px;
   color: darken($primary, 15%);
   
   font-weight: normal;
-  letter-spacing: 5px;
+  letter-spacing: 15px;
   font-size: 2em;
   font-family: sans-serif;
   text-align: right;
@@ -89,6 +89,7 @@ body {
 
   .button-wrapper {
     position: relative;
+    height: 52px;
     display: flex;
     background-color: lighten(black, 15%);
 

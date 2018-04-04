@@ -8,14 +8,12 @@ import SeqRelease from '../components/sequencer/SeqRelease';
 import SeqClear from '../components/sequencer/SeqClear';
 import SeqGrid from '../components/sequencer/SeqGrid';
 import SeqPatternSelect from '../components/sequencer/SeqPatternSelect'
-import Oscilloscope from '../components/Oscilloscope'
 import { bindActionCreators } from 'redux'
 
 class SequencerContainer extends React.Component {
   constructor(props) {
     super(props);
     this.setPattern = this.setPattern.bind(this)
-    this.toggleCell = this.toggleCell.bind(this)
     }
   
   componentDidMount(){
@@ -52,17 +50,10 @@ class SequencerContainer extends React.Component {
     }
   }
 
-  toggleCell(step, cell) {
-    let clonedPattern = {}
-    Object.assign(clonedPattern, this.props.pattern)
-    let cellState = clonedPattern['grid'][step][cell];
-    clonedPattern['grid'][step][cell] = cellState === 1 ? 0 : 1;
-    this.props.setPattern(clonedPattern)
-  }
-
   render(){
     return (
       <div>
+        
         <div className="button-wrapper seq-button buttons row">
           <SeqBpm
             setBpm={this.props.setBpm}
@@ -87,12 +78,6 @@ class SequencerContainer extends React.Component {
         </div>
         
         
-        <SeqGrid
-          pattern={this.props.pattern}
-          currentStep={this.props.currentStep}
-          toggleCell={this.toggleCell}
-          noteNames={this.props.noteNames}
-        />
       </div>
     )
   }

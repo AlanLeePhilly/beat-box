@@ -1,13 +1,19 @@
 import React from 'react';
-import {connect} from 'react-redux'
-import {NOTEFREQS, ROOTNOTES, SCALESTEPS, DRUMNAMES} from '../constants/Constants'
-import {setMasterGain, nextStep, play, pause} from '../actions/synthAdjust'
-import {setNoteNames} from '../actions/sequencerAdjust'
-import {setKitName, setBufferList} from '../actions/samplerAdjust'
+import { connect } from 'react-redux'
+
+import { NOTEFREQS, ROOTNOTES, SCALESTEPS, DRUMNAMES } from '../constants/Constants'
+import { setMasterGain, nextStep, play, pause } from '../actions/synthAdjust'
+import { setNoteNames } from '../actions/sequencerAdjust'
+import { setKitName, setBufferList, setLoaded } from '../actions/samplerAdjust'
+
 import SamMasterGain from '../components/sampler/SamMasterGain'
 import SamPlay from '../components/sampler/SamPlay'
 import SamKitSelector from '../components/sampler/SamKitSelector'
-import {BufferLoader} from '../helpers/BufferLoader'
+import Oscilloscope from '../components/visualizer/Oscilloscope'
+import Spectrum from '../components/visualizer/Spectrum'
+
+import { BufferLoader } from '../helpers/BufferLoader'
+
 
 class SamplerContainer extends React.Component {
   constructor(props) {
@@ -19,13 +25,18 @@ class SamplerContainer extends React.Component {
     }
     this.onPlay = this.onPlay.bind(this)
     this.setNoteNames = this.setNoteNames.bind(this)
-    this.finishedLoading = this.finishedLoading.bind(this)
+    this.makeSound = this.makeSound.bind(this)
     this.loadSamples = this.loadSamples.bind(this)
     this.setBufferList = this.setBufferList.bind(this)
   }
 
   componentDidMount(){
     this.setNoteNames()
+  }
+  
+  componentWillUnmount(){
+    clearInterval(this.interval)
+    this.props.pause()
   }
 
   setNoteNames(){
@@ -40,12 +51,12 @@ class SamplerContainer extends React.Component {
       this.props.pause()
     } else {
       this.props.play()
-      this.finishedLoading()
+      this.makeSound()
       this.interval = setInterval(() => {
         this.props.nextStep()
         // var next = this.this.props.data.pattern[this.this.props.data.currentStep]
         // var seqData = this.this.props.data
-        this.finishedLoading();
+        this.makeSound();
       }, ((60 * 500) / this.props.bpm));
     }
   }
@@ -65,9 +76,10 @@ class SamplerContainer extends React.Component {
 
   setBufferList(bufferList){
     this.setState({bufferList: bufferList})
+    this.props.setLoaded(true)
   }
 
-  finishedLoading() {
+  makeSound() {
     let stepPattern = this.props.pattern.grid[this.props.currentStep]
     let bufferList = this.state.bufferList.map((freq, i) =>
       stepPattern[i] === 1 ? freq : null
@@ -98,13 +110,13 @@ class SamplerContainer extends React.Component {
     return(
       <div className="seq-button buttons row">
         <div className='button-wrapper'>  
-          <button onClick={ () => { this.loadSamples() } }>
-            LoadKit
-          </button>
+          
         </div>
         <SamPlay
           play={this.onPlay}
           isPlaying={this.props.playing}
+          isLoaded={this.props.loaded}
+          loadSamples={this.loadSamples}
         />
         <SamKitSelector
           kitName={this.props.kitName}
@@ -127,6 +139,7 @@ const mapDispatchToProps = (dispatch) => {
     setMasterGain: (masterGain) => dispatch(setMasterGain(masterGain)),
     setNoteNames: (noteNames) => dispatch(setNoteNames(noteNames)),
     setKitName: (kitName) => dispatch(setKitName(kitName)),
+    setLoaded: (loaded) => dispatch(setLoaded(loaded)),
     nextStep: () => dispatch(nextStep()),
     play: () => dispatch(play()),
     pause: () => dispatch(pause())
@@ -143,44 +156,9 @@ const mapStateToProps = (state) => {
     bpm: state.sequencer.bpm,
     kitName: state.sampler.kitName,
     bufferList: state.sampler.bufferList,
+    loaded: state.sampler.loaded,
     masterGain: state.synth.masterGain
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SamplerContainer);
-
-
-
-//
-//
-//   render() {
-//     let analyser
-//     if (this.analyser){
-//       analyser = this.analyser
-//     }
-//
-//     let synthData = this.state
-//     let isPlaying = this.this.props.data.playing
-//     let play = () => { this.onPlay() }
-//     let handleChange = (name, value) => { this.handleChange(name, value) }
-//     return (
-//       <div>
-//
-//         <Synth
-//           synthData={synthData}
-//           isPlaying={isPlaying}
-//           handleChange={handleChange}
-//           play={play}
-//         />
-//
-//         <Oscilloscope
-//         audioContext={audioContext}
-//         analyser={analyser}
-//         />
-//
-//       </div>
-//     )
-//   }
-// }
-//
-// export default SamplerContainer;
