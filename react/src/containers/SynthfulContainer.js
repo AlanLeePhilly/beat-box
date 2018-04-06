@@ -69,8 +69,6 @@ class SynthfulContainer extends React.Component {
     ).filter(x => x)
     let voiceCount = freqArr.length
     let masterGain = this.props.ctx.createGain()
-    this.analyser = this.props.ctx.createAnalyser()
-    this.analyser.fftSize = 4096;
     let oscArr = []
     let gainArr = []
     for (var i=0; i < voiceCount; i++) {
@@ -84,6 +82,9 @@ class SynthfulContainer extends React.Component {
       oscArr[i].connect(gainArr[i]);
       gainArr[i].connect(masterGain);
     }
+    this.analyser = this.props.ctx.createAnalyser()
+    this.analyser.fftSize = 4096;
+    
     masterGain.connect(this.analyser)
     this.analyser.connect(this.props.ctx.destination)
 
@@ -96,10 +97,10 @@ class SynthfulContainer extends React.Component {
 
   render() {
     let selectedVisualizers = []
-    if (this.props.seeSpectrum){
+    if (this.props.seeSpectrum && this.analyser){
       selectedVisualizers.push(
-        <div className='spectrum'>
-          <canvas id='spec' className='specs'></canvas>
+        <div className='spectrum column medium-6'>
+          <canvas id='spectrum' className='specs'></canvas>
           <Spectrum
             audioContext={this.props.ctx}
             analyser={this.analyser}
@@ -107,9 +108,9 @@ class SynthfulContainer extends React.Component {
         </div>
       )
     }
-    if (this.props.seeOscilloscope){
+    if (this.props.seeOscilloscope && this.analyser){
       selectedVisualizers.push(
-        <div className='oscilloscope'>
+        <div className='oscilloscope column medium-6'>
           <canvas id='scope' className='specs'></canvas>
           <Oscilloscope
             audioContext={this.props.ctx}
@@ -119,50 +120,50 @@ class SynthfulContainer extends React.Component {
       )
     }
     
-    
     return(
-      <div className='row '>
-        <div className="seq-button buttons column 8">
-          <div className='button-wrapper'>
-            {/* <button onClick={ () => { this.setFreqs() } }>
-              Update
-            </button> */}
+      <div className="column medium-12 end">
+        <div className="column medium-8 end">
+          Synthesizer:
+          <div className='synth-buttons medium-12 btn-box buttons'>
+              {/* <button onClick={ () => { this.setFreqs() } }>
+                Update
+              </button> */}
+            <SynPlay
+              play={this.onPlay}
+              isPlaying={this.props.playing}
+            />
+            <SynRootNote
+              rootNote={this.props.rootNote}
+              setRootNote={this.props.setRootNote}
+              pause={this.pause}
+            />
+
+            <SynOctave
+              octave={this.props.octave}
+              setOctave={this.props.setOctave}
+              pause={this.pause}
+            />
+
+            <SynScale
+              scale={this.props.scale}
+              setScale={this.props.setScale}
+              pause={this.pause}
+            />
+
+            <SynWaveType
+              waveType={this.props.waveType}
+              setWaveType={this.props.setWaveType}
+              pause={this.pause}
+            />
+
+            {/* <SynMasterGain
+              masterGain={this.props.masterGain}
+              setMasterGain={this.props.setMasterGain}
+              pause={this.pause}
+            /> */}
           </div>
-          <SynPlay
-            play={this.onPlay}
-            isPlaying={this.props.playing}
-          />
-          <SynRootNote
-            rootNote={this.props.rootNote}
-            setRootNote={this.props.setRootNote}
-            pause={this.pause}
-          />
-
-          <SynOctave
-            octave={this.props.octave}
-            setOctave={this.props.setOctave}
-            pause={this.pause}
-          />
-
-          <SynScale
-            scale={this.props.scale}
-            setScale={this.props.setScale}
-            pause={this.pause}
-          />
-
-          <SynWaveType
-            waveType={this.props.waveType}
-            setWaveType={this.props.setWaveType}
-            pause={this.pause}
-          />
-
-          <SynMasterGain
-            masterGain={this.props.masterGain}
-            setMasterGain={this.props.setMasterGain}
-            pause={this.pause}
-          />
         </div>
-        <div className='visualizers row'>
+        <div className='visualizers'>
           {selectedVisualizers}
         </div>
       </div>

@@ -14,6 +14,7 @@ class SequencerContainer extends React.Component {
   constructor(props) {
     super(props);
     this.setPattern = this.setPattern.bind(this)
+    this.clearPattern = this.clearPattern.bind(this)
     }
   
   componentDidMount(){
@@ -29,16 +30,19 @@ class SequencerContainer extends React.Component {
   }
 
   clearPattern(){
-    this.props.setPattern([
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0]
-    ])
+    this.props.setPattern({
+      name: '',
+      grid: [
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0]
+      ]
+    })
   }
 
   play(){
@@ -52,30 +56,25 @@ class SequencerContainer extends React.Component {
 
   render(){
     return (
-      <div>
-        
-        <div className="button-wrapper seq-button buttons row">
-          <SeqBpm
-            setBpm={this.props.setBpm}
-            bpm={this.props.bpm}
-          />
+      <div className="seq-button btn-box buttons">
+        {/* <SeqBpm
+          setBpm={this.props.setBpm}
+          bpm={this.props.bpm}
+        /> */}
 
-          <SeqRelease
-            setRelease={this.props.setRelease}
-            release={this.props.release}
-          />
+        {/* <SeqRelease
+          setRelease={this.props.setRelease}
+          release={this.props.release}
+        /> */}
+        <SeqPatternSelect
+          setPattern={this.setPattern}
+          pattern={this.props.pattern}
+          patterns={this.props.patterns}
+        />
 
-          <SeqClear
-            clearPattern={this.clearPattern}
-          />
-          
-          <SeqPatternSelect
-            setPattern={this.setPattern}
-            pattern={this.props.pattern}
-            patterns={this.props.patterns}
-          />
-          
-        </div>
+        <SeqClear
+          clearPattern={this.clearPattern}
+        />
         
         
       </div>

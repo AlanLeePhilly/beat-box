@@ -18,8 +18,11 @@ body {
   height: 100vh;
   padding-top: 1em;
   text-align: center;
+  margin-bottom: 50px;
 }
-
+#app{
+    margin-bottom: 200px;
+}
 #scope{
   text-align: right;
 }
@@ -67,6 +70,18 @@ body {
 .buttons {
   display: flex;
   padding: 0.35em 0 0.5em;
+  align-items: center;
+  justify-content: center;
+  
+  span {
+    position: absolute;
+    color: black;
+    top: 46px;
+    left: 10px;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
 
   button, select, input {
     margin: 5px;
@@ -91,17 +106,9 @@ body {
     position: relative;
     height: 52px;
     display: flex;
-    background-color: lighten(black, 15%);
+    // background-color: lighten(black, 15%);
 
-    span {
-      position: absolute;
-      color: black;
-      top: -12px;
-      left: 10px;
-      text-align: center;
-      font-size: 10px;
-      letter-spacing: 1px;
-    }
+
   }
 
   select {
@@ -187,4 +194,49 @@ footer {
       border-bottom: 1px solid;
     }
   }
+}
+
+
+.btn-box{
+  padding: 0px;
+  border-style: solid;
+  border-radius: 4px;
+  border-width: medium;
+  border-color: #414D4E;
+  border-spacing: 5px;
+  box-sizing: unset;
+}
+
+.synth-buttons{
+  padding-bottom: 10px;
+}
+$grid-column-gutter: (
+  small: 20px,
+  medium: 30px,
+);
+
+button{
+  line-height: normal;
+}
+
+select{
+  line-height: normal;
+  -webkit-appearance: menulist;
+}
+.visualizers{
+  margin: 10px;
+}
+.oscilloscope{
+  margin-top: 10px;
+  padding: 0;
+}
+
+.spectrum{
+  margin-top: 10px;
+  padding: 0;
+}
+
+#load-btn.inactive{
+  background: #9999a3;
+  color: #5d5c5c;
 }

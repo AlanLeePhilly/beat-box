@@ -58,10 +58,8 @@ class Dashboard extends React.Component {
           setPattern={this.props.setPattern}
           noteNames={this.props.noteNames}
         />
-        
-        
-        <div className='row'>
-          <div className="column medium-4">
+        <div className=' gutter-small row'>
+          <div className="column medium-4 small-12">
               Device:
               <DeviceToggle 
                 device={this.props.device}
@@ -69,7 +67,12 @@ class Dashboard extends React.Component {
               />
           </div>
           
-          <div className="column medium-4">
+          <div className="column medium-4 small-12">
+            Grid:
+            <SequencerContainer />
+          </div>
+          
+          <div className="column medium-4 small-12">
             Visualizers:
             <VisualizerSwitches 
               seeOscilloscope={this.props.seeOscilloscope}
@@ -78,12 +81,10 @@ class Dashboard extends React.Component {
               setSpectrum={this.props.setSpectrum}        
             />
           </div>
-          
         </div>
-        
-        {selectedDevice}
-        
-        <SequencerContainer />
+        <div className=' gutter-small row'>
+          {selectedDevice}
+        </div>
       </div>
     )
   }

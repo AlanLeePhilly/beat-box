@@ -96,10 +96,11 @@ class SamplerContainer extends React.Component {
       sourceArr[i].connect(gainArr[i]);
       gainArr[i].connect(masterGain);
     }
-    let analyser = this.props.ctx.createAnalyser()
+    this.analyser = this.props.ctx.createAnalyser()
+    this.analyser.fftSize = 8192;
     
-    masterGain.connect(analyser)
-    analyser.connect(this.props.ctx.destination)
+    masterGain.connect(this.analyser)
+    this.analyser.connect(this.props.ctx.destination)
 
     setTimeout(() => {
       masterGain.gain.setTargetAtTime(0, this.props.ctx.currentTime, 0.015);
@@ -107,28 +108,55 @@ class SamplerContainer extends React.Component {
   }
 
   render() {
-    return(
-      <div className="seq-button buttons row">
-        <div className='button-wrapper'>  
-          
+    let selectedVisualizers = []
+    if (this.props.seeSpectrum && this.analyser){
+      selectedVisualizers.push(
+        <div className='spectrum column medium-6'>
+          <canvas id='spectrum' className='specs'></canvas>
+          <Spectrum
+            audioContext={this.props.ctx}
+            analyser={this.analyser}
+          />
         </div>
-        <SamPlay
-          play={this.onPlay}
-          isPlaying={this.props.playing}
-          isLoaded={this.props.loaded}
-          loadSamples={this.loadSamples}
-        />
-        <SamKitSelector
-          kitName={this.props.kitName}
-          setKitName={this.props.setKitName}
-        />
-        <SamMasterGain
-          masterGain={this.props.masterGain}
-          setMasterGain={this.props.setMasterGain}
-        />
-
+      )
+    }
+    if (this.props.seeOscilloscope && this.analyser){
+      selectedVisualizers.push(
+        <div className='oscilloscope column medium-6'>
+          <canvas id='scope' className='specs'></canvas>
+          <Oscilloscope
+            audioContext={this.props.ctx}
+            analyser={this.analyser}
+          />
+        </div>
+      )
+    }
+    return(
+    <div className="column medium-12 end">
+      <div className="column medium-4 end row">
+        Sampler:
+        <div className="samp-button medium-12 btn-box  buttons">
+          <SamPlay
+            play={this.onPlay}
+            isPlaying={this.props.playing}
+            isLoaded={this.props.loaded}
+            loadSamples={this.loadSamples}
+            kitName={this.props.kitName}
+          />
+          <SamKitSelector
+            kitName={this.props.kitName}
+            setKitName={this.props.setKitName}
+          />
+          {/* <SamMasterGain
+            masterGain={this.props.masterGain}
+            setMasterGain={this.props.setMasterGain}
+          /> */}
+        </div>
       </div>
-
+      <div className='visualizers'>
+        {selectedVisualizers}
+      </div>
+    </div>
     )
   }
 }
@@ -157,7 +185,9 @@ const mapStateToProps = (state) => {
     kitName: state.sampler.kitName,
     bufferList: state.sampler.bufferList,
     loaded: state.sampler.loaded,
-    masterGain: state.synth.masterGain
+    masterGain: state.synth.masterGain,
+    seeSpectrum: state.visualizer.seeSpectrum,
+    seeOscilloscope: state.visualizer.seeOscilloscope
   }
 }
 

@@ -7,7 +7,7 @@ const SynRootNote = props =>{
 
   return(
     <div className="button-wrapper">
-      <span>Root Note</span>
+      <span>Root</span>
       <select
         name="rootNote"
         value={props.rootNote}

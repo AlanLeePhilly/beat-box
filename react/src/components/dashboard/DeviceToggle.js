@@ -10,7 +10,7 @@ const DeviceToggle = props => {
   }
   
   return(
-    <div className="device-toggle buttons">
+    <div className="device-toggle btn-box buttons">
       <button 
         className={classNames('synth-toggle', { active: props.device == 'synth' })}
         onClick={handleSynth}>

@@ -6,7 +6,7 @@ const SynMasterGain = props =>{
 
 
   return(
-    <div className="button-wrapper">
+    <div className="">
       <select
         name="masterGain"
         value={props.masterGain * 10}

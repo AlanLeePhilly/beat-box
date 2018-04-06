@@ -1,5 +1,5 @@
 const initialState = {
-  kitName: 'acoustic-kit',
+  kitName: "Select Kit",
   loaded: false
 }
 

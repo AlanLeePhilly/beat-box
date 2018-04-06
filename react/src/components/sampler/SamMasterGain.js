@@ -1,13 +1,13 @@
 import React from 'react';
 import { GAIN } from '../../constants/Constants'
+import Slider from 'react-rangeslider'
 
 const SamMasterGain = props =>{
   let gainArr = GAIN.map((g, i) => <option key={i}>{g}</option>)
 
 
   return(
-    <div className="button-wrapper">
-      <span>Volume</span>
+    <div className="">
       <select
         name="masterGain"
         value={props.masterGain * 10}
@@ -18,8 +18,11 @@ const SamMasterGain = props =>{
         className="masterGain">
         {gainArr}
       </select>
+      <span>Volume</span>
     </div>
   )
 }
 
 export default SamMasterGain;
+
+
