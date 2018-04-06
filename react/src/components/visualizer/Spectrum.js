@@ -15,7 +15,7 @@ const Spectrum = props =>{
     var width = ctx.canvas.width;
     var height = ctx.canvas.height;
     var freqData = new Uint8Array(analyser.frequencyBinCount);
-    var scaling = height / 256;
+    var scaling = height / 512;
 
     analyser.getByteFrequencyData(freqData);
 

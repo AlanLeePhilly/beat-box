@@ -20,7 +20,7 @@ u1 = User.create({
 
 p1 = Pattern.create({
   user: User.last,
-  name: 'pat1',
+  name: 'Ascending',
   device: 'synth',
   grid: [
    [1,0,0,0,0,0,0,0],
@@ -36,7 +36,7 @@ p1 = Pattern.create({
 
 p2 = Pattern.create({
   user: User.last,
-  name: 'pat2',
+  name: 'All Cells',
   device: 'synth',
   grid: [
    [1,1,1,1,1,1,1,1],
@@ -52,7 +52,7 @@ p2 = Pattern.create({
 
 p3 = Pattern.create({
   user: User.last,
-  name: 'pat3',
+  name: 'Simple Drums',
   device: 'sampler',
   grid: [
    [1,0,0,0,0,0,0,0],

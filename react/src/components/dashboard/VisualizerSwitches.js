@@ -9,18 +9,18 @@ const VisualizerSwitches = props =>{
     props.setOscilloscope(!props.seeOscilloscope)
   }
   return(
-    <div className="visualizer-toggle buttons">
+    <div className="visualizer-toggle btn-box buttons">
       
       <button 
         className={classNames('spectrum-toggle', { active: props.seeSpectrum })}
         onClick={handleSpec}>
-        Spectrum
+        Spec
       </button>
       
       <button 
         className={classNames('spectrum-toggle', { active: props.seeOscilloscope })}
         onClick={handleOsc}>
-        Oscilloscope
+        Scope
       </button>
       
     </div>

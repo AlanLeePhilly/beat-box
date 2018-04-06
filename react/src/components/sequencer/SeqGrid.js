@@ -12,6 +12,7 @@ const SeqGrid = props =>{
     Object.assign(clonedPattern, props.pattern)
     let cellState = clonedPattern['grid'][step][cell];
     clonedPattern['grid'][step][cell] = cellState === 1 ? 0 : 1;
+    clonedPattern['name'] = "(custom)"
     props.setPattern(clonedPattern)
   }
 

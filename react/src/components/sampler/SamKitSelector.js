@@ -2,12 +2,19 @@ import React from 'react';
 import { KITNAMES } from '../../constants/Constants'
 
 const SamKitSelector = props =>{
-  let kitNameArr = KITNAMES.map((g, i) => <option key={i}>{g}</option>)
+  
+  let kitNameArr = KITNAMES.map((g, i) => {
+    if(i==0){
+      return(<option disabled key={i}>{g}</option>)
+    } else{
+      return(<option key={i}>{g}</option>)
+    }
+  })
+
 
 
   return(
     <div className="button-wrapper">
-      <span>Kit</span>
       <select
         name="kitName"
         value={props.kitName}
@@ -23,3 +30,5 @@ const SamKitSelector = props =>{
 }
 
 export default SamKitSelector;
+
+

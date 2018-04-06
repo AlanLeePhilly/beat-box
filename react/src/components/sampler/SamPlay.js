@@ -7,21 +7,24 @@ const SamPlay = props =>{
     button = (
       <button
         className={props.isPlaying ? 'active' : ''}
-        onClick={ () => { props.isPlaying? props.play() : props.play() } }>
+        onClick={ () => { props.isPlaying ? props.play() : props.play() } }>
         Play
       </button>
     )
   } else {
     button = (
-      <button onClick={ () => { props.loadSamples() } }>
-        LoadKit
+      <button 
+        id='load-btn'
+        className={props.kitName == "Select Kit" ? 'inactive' : ''}
+        onClick={ () => { props.loadSamples() } }>
+        Load
       </button>
     )
   }
   
   
   return(
-    <div className='button-wrapper'>
+    <div>
       {button}
     </div>
   )
