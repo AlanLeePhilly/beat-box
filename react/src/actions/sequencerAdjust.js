@@ -59,30 +59,33 @@ export const fetchPatternsBegin = () => ({
 
 export const fetchPatternsSuccess = patterns => ({
   type: FETCH_PATTERNS_SUCCESS,
-  payload: { patterns }
+  payload: patterns
 })
 
 export const fetchPatternsError = error => ({
   type: FETCH_PATTERNS_FAILURE,
-  payload: { error }
+  payload: error
 })
 
 export const fetchPatterns = () => (dispatch) => {
-    dispatch(fetchPatternsBegin());
+    dispatch(fetchPatternsBegin())
     fetch('/api/v1/patterns')
       .then(handleErrors)
       .then(res => res.json())
       .then(json => {
-        dispatch(fetchPatternsSuccess(json.patterns));
-        json.patterns;
+        dispatch(fetchPatternsSuccess(json))
+        json
       })
-      .catch(error => dispatch(fetchPatternsFailure(error)));
+      .catch(error => {
+        console.log(error)
+        dispatch(fetchPatternsFailure(error))
+      })
   }
 
 
 function handleErrors(response) {
   if (!response.ok) {
-    throw Error(response.statusText);
+    throw Error(response.statusText)
   }
   return response;
 }

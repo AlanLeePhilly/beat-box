@@ -15,9 +15,8 @@ RSpec.describe Api::V1::PatternsController, type: :controller do
       returned_json = JSON.parse(response.body)
       expect(response.status).to eq 200
       expect(response.content_type).to eq('application/json')
-      expect(returned_json['patterns'].length).to eq 2
-      expect(returned_json['patterns'][0]['name']).to eq pattern1.name
-      expect(returned_json['patterns'][1]['device']).to eq pattern2.device
+      expect(returned_json.length).to eq 2
+      expect(returned_json[0]['name']).to eq pattern1.name
     end
   end
   
@@ -28,7 +27,6 @@ RSpec.describe Api::V1::PatternsController, type: :controller do
       expect(response.status).to eq 200
       expect(response.content_type).to eq('application/json')
       expect(returned_json['pattern']['name']).to eq pattern1.name
-      expect(returned_json['pattern']['device']).to eq pattern1.device
     end
   end
   

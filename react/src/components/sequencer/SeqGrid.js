@@ -5,17 +5,19 @@ import SeqLabel from './SeqLabel'
 
 const SeqGrid = props =>{
   let pattern = props.pattern.grid.slice(0)    
-  pattern.unshift(props.noteNames)
+  pattern.unshift(props.displayNames)
+
 
   function toggleCell(step, cell) {
-    let clonedPattern = {}
-    Object.assign(clonedPattern, props.pattern)
-    let cellState = clonedPattern['grid'][step][cell];
-    clonedPattern['grid'][step][cell] = cellState === 1 ? 0 : 1;
-    clonedPattern['name'] = "(custom)"
-    props.setPattern(clonedPattern)
+    let newPattern = {}
+    let clonedGrid = props.pattern.grid.slice(0)
+    let cellState = clonedGrid[step][cell];
+    clonedGrid[step][cell] = cellState === 1 ? 0 : 1;
+    newPattern['name'] = "(custom)"
+    newPattern['grid'] = clonedGrid
+    props.setPattern(newPattern)
   }
-
+  
   return(
     <div className="flex row">
       <div className="flex grid large-10 medium-10 small-2 column">

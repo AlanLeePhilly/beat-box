@@ -10,10 +10,8 @@ const SynWaveType = props =>{
       <span>Wave Type</span>
       <select
         name="type"
-        value={props.waveType}
-        onChange={(e) => {
-          props.setWaveType(e.target.value.toLowerCase())
-        }}
+        value={props.waveType.charAt(0).toUpperCase() + props.waveType.slice(1)}
+        onChange={(e) => { props.setWaveType(e.target.value.toLowerCase()) }}
         data-label="wave"
         className="wave">
         {waveArr}

@@ -22,7 +22,8 @@ class SequencerContainer extends React.Component {
   }
 
   setPattern(patName){
-    this.props.patterns.forEach( pattern => {
+    let patterns = this.props.patterns.slice(0)
+    patterns.forEach( pattern => {
       if (pattern.name == patName) {
         this.props.setPattern(pattern)
       }

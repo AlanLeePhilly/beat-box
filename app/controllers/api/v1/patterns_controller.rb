@@ -1,6 +1,6 @@
 class Api::V1::PatternsController < ApplicationController  
   def index
-    render json: { patterns: Pattern.all}
+    render json: Pattern.all, each_serializer: PatternSerializer
   end
   
   def show

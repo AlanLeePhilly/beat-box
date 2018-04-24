@@ -11,10 +11,7 @@ const SynScale = props =>{
       <select
         name="scale"
         value={props.scale}
-        onChange={(e) => {
-          props.setScale(e.target.value)
-          // props.setFreqs()
-        }}
+        onChange={(e) => { props.setScale(e.target.value) }}
         data-label="scale"
         className="scale">
         {scaleArr}

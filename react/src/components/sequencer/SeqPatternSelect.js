@@ -9,9 +9,7 @@ const SeqPatternSelect = props =>{
       <select
         name="pattern"
         value={props.pattern.name}
-        onChange={(e) => {
-          props.setPattern(e.target.value)
-        }}
+        onChange={(e) => { props.setPattern(e.target.value) }}
         data-label="pattern"
         className="pattern">
         {patternOptions}
