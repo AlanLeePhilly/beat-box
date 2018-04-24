@@ -1,6 +1,7 @@
 source 'https://rubygems.org/'
 
 gem 'autoprefixer-rails'
+gem 'active_model_serializers'
 gem 'coffee-rails'
 gem 'foundation-rails'
 gem 'figaro'

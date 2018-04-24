@@ -23,28 +23,34 @@ class Dashboard extends React.Component {
   handleChange(device){
     this.props.setDevice(device)
   }
+  
+  UNSAFE_componentWillReceiveProps(nextProps){
+    debugger
+  }
 
   render(){
-    let selectedDevice 
+    let selectedDevice
+    let displayNames
     if (this.props.device == "synth"){
+      displayNames = this.props.noteNames
       selectedDevice = <SynthfulContainer 
                         ctx={this.ctx}
                       />
     } else {
+      displayNames = this.props.drumNames
       selectedDevice = <SamplerContainer 
                         ctx={this.ctx}
                       />
     }
     
     let setSpectrum = () => {
-      console.log(this.props.seeSpectrum)
       this.props.setSpectrum(!this.props.seeSpectrum)
     }
     
     let setOscilloscope = () => {
       this.props.setOscilloscope(!this.props.seeOscilloscope)
     }
-    
+
     
     return(
       <div className="Dashboard Sequencer grid">
@@ -56,7 +62,7 @@ class Dashboard extends React.Component {
           pattern={this.props.pattern}
           currentStep={this.props.currentStep}
           setPattern={this.props.setPattern}
-          noteNames={this.props.noteNames}
+          displayNames={displayNames}
         />
         <div className=' gutter-small row'>
           <div className="column medium-4 small-12">
@@ -106,7 +112,8 @@ const mapStateToProps = (state) => {
     seeOscilloscope: state.visualizer.seeOscilloscope,
     pattern: state.sequencer.pattern,
     currentStep: state.sequencer.currentStep,
-    noteNames: state.sequencer.noteNames
+    noteNames: state.synth.noteNames,
+    drumNames: state.sampler.drumNames
   }
 }
 

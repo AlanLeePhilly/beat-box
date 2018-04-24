@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
-import { NOTEFREQS, ROOTNOTES, SCALESTEPS, DRUMNAMES } from '../constants/Constants'
+import { DRUMNAMES } from '../constants/Constants'
 import { setMasterGain, nextStep, play, pause } from '../actions/synthAdjust'
-import { setNoteNames } from '../actions/sequencerAdjust'
-import { setKitName, setBufferList, setLoaded } from '../actions/samplerAdjust'
+import { setKitName, setDrumNames,setBufferList, setLoaded } from '../actions/samplerAdjust'
 
 import SamMasterGain from '../components/sampler/SamMasterGain'
 import SamPlay from '../components/sampler/SamPlay'
@@ -24,14 +23,14 @@ class SamplerContainer extends React.Component {
       bufferList: []
     }
     this.onPlay = this.onPlay.bind(this)
-    this.setNoteNames = this.setNoteNames.bind(this)
+    this.setDrumNames = this.setDrumNames.bind(this)
     this.makeSound = this.makeSound.bind(this)
     this.loadSamples = this.loadSamples.bind(this)
     this.setBufferList = this.setBufferList.bind(this)
   }
 
   componentDidMount(){
-    this.setNoteNames()
+    this.setDrumNames()
   }
   
   componentWillUnmount(){
@@ -39,10 +38,16 @@ class SamplerContainer extends React.Component {
     this.props.pause()
   }
 
-  setNoteNames(){
-    let noteNames = DRUMNAMES.map(drumName => `${this.props.kitName} - ${drumName}`)
-    noteNames.push("","")
-    this.props.setNoteNames(noteNames)
+  setDrumNames(){
+    let drumNames
+    if (this.props.loaded) {
+      drumNames = DRUMNAMES.map(drumName => `${this.props.kitName} - ${drumName}`)
+      drumNames.push("","")
+    } else {
+      drumNames = ["LOADED", "NO KIT", "", "", "", "", "", ""]
+    }
+
+    this.props.setDrumNames(drumNames)
   }
 
   onPlay(){
@@ -77,6 +82,7 @@ class SamplerContainer extends React.Component {
   setBufferList(bufferList){
     this.setState({bufferList: bufferList})
     this.props.setLoaded(true)
+    this.setDrumNames()
   }
 
   makeSound() {
@@ -165,7 +171,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setBufferList: (bufferList) => dispatch(setBufferList(bufferList)),
     setMasterGain: (masterGain) => dispatch(setMasterGain(masterGain)),
-    setNoteNames: (noteNames) => dispatch(setNoteNames(noteNames)),
+    setDrumNames: (drumNames) => dispatch(setDrumNames(drumNames)),
     setKitName: (kitName) => dispatch(setKitName(kitName)),
     setLoaded: (loaded) => dispatch(setLoaded(loaded)),
     nextStep: () => dispatch(nextStep()),
@@ -180,9 +186,9 @@ const mapStateToProps = (state) => {
     playing: state.sequencer.playing,
     currentStep: state.sequencer.currentStep,
     release: state.sequencer.release,
-    noteNames: state.sequencer.noteNames,
     bpm: state.sequencer.bpm,
     kitName: state.sampler.kitName,
+    drumNames: state.sampler.drumNames,
     bufferList: state.sampler.bufferList,
     loaded: state.sampler.loaded,
     masterGain: state.synth.masterGain,

@@ -5,7 +5,7 @@ const SynPlay = props =>{
     <div className="button-wrapper">
       <button
         className={props.isPlaying ? 'active' : ''}
-        onClick={ () => { props.isPlaying? props.play() : props.play() } }>
+        onClick={() => { props.play() }}>
         Play
       </button>
     </div>

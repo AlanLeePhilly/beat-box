@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import {NOTEFREQS, ROOTNOTES, SCALESTEPS} from '../constants/Constants'
-import { setRootNote, setOctave, setScale, setFreqs, setWaveType, setMasterGain, nextStep, play, pause } from '../actions/synthAdjust'
+import { setRootNote, setOctave, setScale, setWaveType, setMasterGain, nextStep, play, pause } from '../actions/synthAdjust'
 import {setNoteNames} from '../actions/sequencerAdjust'
 import SynOctave from '../components/synth/SynOctave'
 import SynRootNote from '../components/synth/SynRootNote'
@@ -21,27 +21,17 @@ class SynthfulContainer extends React.Component {
     }
     this.onPlay = this.onPlay.bind(this)
     this.makeSound = this.makeSound.bind(this)
-    this.setFreqs = this.setFreqs.bind(this)
     this.pause = this.pause.bind(this)
   }
 
   componentDidMount(){
-    this.setFreqs()
   }
   
   componentWillUnmount(){
     this.pause()
   }
 
-  setFreqs({ rootNote, octave, scale} = this.props){
-    let rootNoteIndx = ROOTNOTES.indexOf(rootNote)
-    let rootIndex = rootNoteIndx + (octave * 12);
-    let indexArr = SCALESTEPS[scale].map((x, i) => { return x + rootIndex })
-    let noteNames = indexArr.map(val => { return Object.keys(NOTEFREQS)[val] })
-    let noteFreqs = indexArr.map(val => { return Object.values(NOTEFREQS)[val] })
-    this.props.setNoteNames(noteNames)
-    this.props.setFreqs(noteFreqs)
-  }
+
 
   onPlay(){
     if (this.props.playing){
@@ -59,12 +49,11 @@ class SynthfulContainer extends React.Component {
   pause(){
     clearInterval(this.interval)
     this.props.pause()
-    this.setFreqs()
   }
 
   makeSound(){
     let stepPattern = this.props.pattern.grid[this.props.currentStep]
-    let freqArr = this.props.freqs.map((freq, i) =>
+    let freqArr = this.props.noteFreqs.map((freq, i) =>
       stepPattern[i] === 1 ? freq : null
     ).filter(x => x)
     let voiceCount = freqArr.length
@@ -87,6 +76,8 @@ class SynthfulContainer extends React.Component {
     
     masterGain.connect(this.analyser)
     this.analyser.connect(this.props.ctx.destination)
+    
+    masterGain.gain.value = this.props.masterGain
 
     setTimeout(() => {
       masterGain.gain.setTargetAtTime(0, this.props.ctx.currentTime, 0.015);
@@ -125,9 +116,6 @@ class SynthfulContainer extends React.Component {
         <div className="column medium-8 end">
           Synthesizer:
           <div className='synth-buttons medium-12 btn-box buttons'>
-              {/* <button onClick={ () => { this.setFreqs() } }>
-                Update
-              </button> */}
             <SynPlay
               play={this.onPlay}
               isPlaying={this.props.playing}
@@ -156,11 +144,10 @@ class SynthfulContainer extends React.Component {
               pause={this.pause}
             />
 
-            {/* <SynMasterGain
+            <SynMasterGain
               masterGain={this.props.masterGain}
               setMasterGain={this.props.setMasterGain}
-              pause={this.pause}
-            /> */}
+            />
           </div>
         </div>
         <div className='visualizers'>
@@ -176,10 +163,8 @@ const mapDispatchToProps = (dispatch) => {
     setRootNote: (rootNote) => dispatch(setRootNote(rootNote)),
     setOctave: (octave) => dispatch(setOctave(octave)),
     setScale: (scale) => dispatch(setScale(scale)),
-    setFreqs: (freqs) => dispatch(setFreqs(freqs)),
     setWaveType: (waveType) => dispatch(setWaveType(waveType)),
     setMasterGain: (masterGain) => dispatch(setMasterGain(masterGain)),
-    setNoteNames: (noteNames) => dispatch(setNoteNames(noteNames)),
     nextStep: () => dispatch(nextStep()),
     play: () => dispatch(play()),
     pause: () => dispatch(pause())
@@ -192,8 +177,7 @@ const mapStateToProps = (state) => {
     playing: state.sequencer.playing,
     currentStep: state.sequencer.currentStep,
     release: state.sequencer.release,
-    noteNames: state.sequencer.noteNames,
-    freqs: state.synth.freqs,
+    noteFreqs: state.synth.noteFreqs,
     waveType: state.synth.waveType,
     masterGain: state.synth.masterGain,
     rootNote: state.synth.rootNote,
@@ -207,39 +191,3 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(SynthfulContainer);
 
-
-
-//
-//
-//   render() {
-//     let analyser
-//     if (this.analyser){
-//       analyser = this.analyser
-//     }
-//
-//     let synthData = this.state
-//     let isPlaying = this.this.props.data.playing
-//     let play = () => { this.onPlay() }
-//     let handleChange = (name, value) => { this.handleChange(name, value) }
-//     return (
-//       <div>
-//
-//         <Synth
-//           synthData={synthData}
-//           isPlaying={isPlaying}
-//           handleChange={handleChange}
-//           play={play}
-//         />
-//         <canvas id='scope' className='specs'></canvas>
-//
-//         <Oscilloscope
-//         audioContext={audioContext}
-//         analyser={analyser}
-//         />
-//
-//       </div>
-//     )
-//   }
-// }
-//
-// export default SynthfulContainer;

@@ -23,7 +23,7 @@ const initialState =
     noteNames: ['X', 'X', 'X', 'F', 'G', 'A', 'B', 'C'],
     bpm: 200,
     release: 100,
-    device: 'sampler',
+    device: 'synth',
     error: null
   }
 
@@ -38,10 +38,11 @@ export default function sequencer(state = initialState, action) {
         playing: action.playing, 
         currentStep: 0 
       })
-    case 'SET_PATTERN':
+    case 'SET_PATTERN':{
       return Object.assign({}, state, {   
         pattern: action.pattern 
       })
+    }
     case 'SET_BPM':
       return Object.assign({}, state, {   
         bpm: action.bpm 
@@ -74,12 +75,12 @@ export default function sequencer(state = initialState, action) {
     case 'FETCH_PATTERNS_SUCCESS':
       return Object.assign({}, state, {   
         loading: false,
-        patterns: action.payload.patterns
+        patterns: action.payload
       }) 
     case 'FETCH_PATTERNS_ERROR':
       return Object.assign({}, state, {
         loading: false,
-        error: action.payload.error,
+        error: action.payload,
         patterns: []
       })
     default:
