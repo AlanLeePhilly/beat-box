@@ -113,7 +113,7 @@ class SynthfulContainer extends React.Component {
     
     return(
       <div className="column medium-12 end">
-        <div className="column medium-8 end">
+        <div className="column medium-9 end">
           Synthesizer:
           <div className='synth-buttons medium-12 btn-box buttons'>
             <SynPlay
