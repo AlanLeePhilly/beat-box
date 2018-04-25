@@ -22,7 +22,7 @@ class SequencerContainer extends React.Component {
   }
 
   setPattern(patName){
-    let patterns = this.props.patterns.slice(0)
+    let patterns = JSON.parse(JSON.stringify(this.props.patterns))
     patterns.forEach( pattern => {
       if (pattern.name == patName) {
         this.props.setPattern(pattern)
