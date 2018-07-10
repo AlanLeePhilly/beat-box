@@ -1,5 +1,4 @@
 # README
-[ ![Build Status](https://app.codeship.com/projects/e0d06150-c633-0135-c48c-2672feea050e/status?branch=master)](https://app.codeship.com/projects/261129)  [![Code Climate](https://codeclimate.com/github/AlanLeePhilly/beat-box/badges/gpa.svg)](https://codeclimate.com/github/AlanLeePhilly/beat-box)  [![Coverage Status](https://coveralls.io/repos/github/AlanLeePhilly/beat-box/badge.svg?branch=master)](https://coveralls.io/github/AlanLeePhilly/beat-box?branch=master)
 
 Beat-Box is an ongoing project to expand 
 
