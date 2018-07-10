@@ -2,6 +2,8 @@
 
 Beat-Box is an ongoing project to expand 
 
+Live demo available at http://beat-box-demo.herokuapp.com/
+
 Dependencies
 
     Ruby 2.3.3
