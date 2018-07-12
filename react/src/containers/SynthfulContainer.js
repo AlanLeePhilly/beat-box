@@ -17,33 +17,57 @@ class SynthfulContainer extends React.Component {
     super(props);
     let analyser
     this.state = {
-      interval: null
+      interval: null,
+      startTime: null,
+      current16thNote: null,
+      lookahead: 25.0,
+      scheduleAheadTime: 0.1,
+      nextNoteTime: 0.0,
+      noteResolution: 0,
+      last16thNoteDrawn: -1,
+      notesInQueue: []
     }
     this.onPlay = this.onPlay.bind(this)
     this.makeSound = this.makeSound.bind(this)
     this.pause = this.pause.bind(this)
-  }
-
-  componentDidMount(){
+    this.scheduler = this.scheduler.bind(this)
+    this.nextNote = this.nextNote.bind(this)
   }
   
   componentWillUnmount(){
     this.pause()
   }
 
-
-
   onPlay(){
     if (this.props.playing){
       this.pause()
     } else {
       this.props.play()
-      this.makeSound()
+      this.setState({ nextNoteTime: this.props.ctx.currentTime })
+      console.log(this.state.nextNoteTime)
       this.interval = setInterval(() => {
-        this.props.nextStep()
-        this.makeSound();
-      }, ((60 * 500) / this.props.bpm));
+        this.scheduler()
+      }, 25)
     }
+  }
+
+  scheduler() {
+      // while there are notes that will need to play before the next interval, 
+      // schedule them and advance the pointer.
+      while (this.state.nextNoteTime < this.props.ctx.currentTime + this.state.scheduleAheadTime ) {
+          this.makeSound(this.state.nextNoteTime );
+          this.nextNote();
+      }
+  }
+  
+  nextNote() {
+      // Advance current note and time by a 16th note...
+      let secondsPerBeat = 60.0 / this.props.bpm * 4;    // Notice this picks up the CURRENT 
+                                            // tempo value to calculate beat length.
+      let newNextNoteTime = this.state.nextNoteTime + 0.25 * secondsPerBeat
+      this.props.nextStep();
+      this.setState({ nextNoteTime: newNextNoteTime })
+      
   }
 
   pause(){
@@ -51,7 +75,7 @@ class SynthfulContainer extends React.Component {
     this.props.pause()
   }
 
-  makeSound(){
+  makeSound(time){
     let stepPattern = this.props.pattern.grid[this.props.currentStep]
     let freqArr = this.props.noteFreqs.map((freq, i) =>
       stepPattern[i] === 1 ? freq : null
@@ -64,7 +88,8 @@ class SynthfulContainer extends React.Component {
       oscArr[i] = this.props.ctx.createOscillator()
       oscArr[i].type = this.props.waveType.toLowerCase();
       oscArr[i].frequency.value = freqArr[i];
-      oscArr[i].start(0);
+      oscArr[i].start(time);
+      oscArr[i].stop(time + 0.05);
       gainArr[i] = this.props.ctx.createGain()
       gainArr[i].gain.value = 1;
 
