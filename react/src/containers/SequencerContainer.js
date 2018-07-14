@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux'
-import { play, pause, setBpm, setCurrentStep, setSteps, setNoteNames, setRelease, setDevice, setPattern, fetchPatterns} from '../actions/sequencerAdjust'
+import { setBpm, setCurrentStep, setSteps, setNoteNames, setRelease, setDevice, setPattern, fetchPatterns} from '../actions/sequencerAdjust'
 import SeqPlay from '../components/sequencer/SeqPlay';
 import SeqBpm from '../components/sequencer/SeqBpm';
 import SeqRelease from '../components/sequencer/SeqRelease';
@@ -46,15 +46,6 @@ class SequencerContainer extends React.Component {
     })
   }
 
-  play(){
-    if (this.props.playing) {
-      this.props.pause()
-    }
-    else {
-      this.props.play(this.props.bpm, this.props.steps)
-    }
-  }
-
   render(){
     return (
       <div className="seq-button btn-box buttons">
@@ -76,8 +67,7 @@ class SequencerContainer extends React.Component {
         <SeqClear
           clearPattern={this.clearPattern}
         />
-        
-        
+
       </div>
     )
   }
@@ -86,8 +76,6 @@ class SequencerContainer extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    play: (bpm, steps) => dispatch(play(bpm, steps)),
-    pause: () => dispatch(pause()),
     fetchPatterns: () => dispatch(fetchPatterns()),
     setPattern: (pattern) => dispatch(setPattern(pattern)),
     setBpm: (bpm) => dispatch(setBpm(bpm)),

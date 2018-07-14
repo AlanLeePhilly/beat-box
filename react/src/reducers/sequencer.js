@@ -21,7 +21,7 @@ const initialState =
     steps: 8,
     currentStep: 0,
     noteNames: ['X', 'X', 'X', 'F', 'G', 'A', 'B', 'C'],
-    bpm: 200,
+    bpm: 120,
     release: 100,
     device: 'synth',
     error: null

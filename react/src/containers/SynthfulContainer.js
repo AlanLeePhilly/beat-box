@@ -15,18 +15,18 @@ import Spectrum from '../components/visualizer/Spectrum'
 class SynthfulContainer extends React.Component {
   constructor(props) {
     super(props);
-    let analyser
     this.state = {
       interval: null,
-      startTime: null,
-      current16thNote: null,
-      lookahead: 25.0,
       scheduleAheadTime: 0.1,
-      nextNoteTime: 0.0,
-      noteResolution: 0,
-      last16thNoteDrawn: -1,
-      notesInQueue: []
+      nextNoteTime: 0.0
     }
+     this.masterGain = this.props.ctx.createGain()
+    this.analyser = this.props.ctx.createAnalyser()
+    this.analyser.fftSize = 4096;
+    this.masterGain.connect(this.analyser)
+    this.analyser.connect(this.props.ctx.destination)
+    
+    
     this.onPlay = this.onPlay.bind(this)
     this.makeSound = this.makeSound.bind(this)
     this.pause = this.pause.bind(this)
@@ -43,26 +43,30 @@ class SynthfulContainer extends React.Component {
       this.pause()
     } else {
       this.props.play()
-      this.setState({ nextNoteTime: this.props.ctx.currentTime })
-      console.log(this.state.nextNoteTime)
+      this.setState({ nextNoteTime: this.props.ctx.currentTime + 0.1 })
       this.interval = setInterval(() => {
         this.scheduler()
-      }, 25)
+      }, 50)
     }
   }
 
   scheduler() {
       // while there are notes that will need to play before the next interval, 
       // schedule them and advance the pointer.
+      let counter = 1;
+      let diff;
       while (this.state.nextNoteTime < this.props.ctx.currentTime + this.state.scheduleAheadTime ) {
-          this.makeSound(this.state.nextNoteTime );
-          this.nextNote();
+          this.makeSound(this.state.nextNoteTime + .1)
+          diff = this.state.nextNoteTime - this.props.ctx.currentTime
+          console.log("step: " + this.props.currentStep + " count: " + counter + " diff: " + diff )
+          this.nextNote()
+          counter++
       }
   }
   
   nextNote() {
       // Advance current note and time by a 16th note...
-      let secondsPerBeat = 60.0 / this.props.bpm * 4;    // Notice this picks up the CURRENT 
+      let secondsPerBeat = 60.0 / this.props.bpm * 2;    // Notice this picks up the CURRENT 
                                             // tempo value to calculate beat length.
       let newNextNoteTime = this.state.nextNoteTime + 0.25 * secondsPerBeat
       this.props.nextStep();
@@ -81,31 +85,23 @@ class SynthfulContainer extends React.Component {
       stepPattern[i] === 1 ? freq : null
     ).filter(x => x)
     let voiceCount = freqArr.length
-    let masterGain = this.props.ctx.createGain()
     let oscArr = []
-    let gainArr = []
+
     for (var i=0; i < voiceCount; i++) {
       oscArr[i] = this.props.ctx.createOscillator()
       oscArr[i].type = this.props.waveType.toLowerCase();
       oscArr[i].frequency.value = freqArr[i];
       oscArr[i].start(time);
-      oscArr[i].stop(time + 0.05);
-      gainArr[i] = this.props.ctx.createGain()
-      gainArr[i].gain.value = 1;
+      oscArr[i].stop(time + .25);
 
-      oscArr[i].connect(gainArr[i]);
-      gainArr[i].connect(masterGain);
+      
+      oscArr[i].connect(this.masterGain);
     }
-    this.analyser = this.props.ctx.createAnalyser()
-    this.analyser.fftSize = 4096;
     
-    masterGain.connect(this.analyser)
-    this.analyser.connect(this.props.ctx.destination)
-    
-    masterGain.gain.value = this.props.masterGain
+    this.masterGain.gain.value = this.props.masterGain
 
     setTimeout(() => {
-      masterGain.gain.setTargetAtTime(0, this.props.ctx.currentTime, 0.015);
+      this.masterGain.gain.setTargetAtTime(0, this.props.ctx.currentTime, 0.015);
     }, parseInt(this.props.release));
   }
 
@@ -115,7 +111,7 @@ class SynthfulContainer extends React.Component {
     let selectedVisualizers = []
     if (this.props.seeSpectrum && this.analyser){
       selectedVisualizers.push(
-        <div className='spectrum column medium-6'>
+        <div className='spectrum column medium-6' key='spec'>
           <canvas id='spectrum' className='specs'></canvas>
           <Spectrum
             audioContext={this.props.ctx}
@@ -126,7 +122,7 @@ class SynthfulContainer extends React.Component {
     }
     if (this.props.seeOscilloscope && this.analyser){
       selectedVisualizers.push(
-        <div className='oscilloscope column medium-6'>
+        <div className='oscilloscope column medium-6' key='scope'>
           <canvas id='scope' className='specs'></canvas>
           <Oscilloscope
             audioContext={this.props.ctx}
