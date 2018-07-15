@@ -1,9 +1,5 @@
 import {setCurrentStep} from './sequencerAdjust'
 
-let currStep = 0;
-let totalSteps = 8
-
-
 export const setRootNote = (rootNote) => ({
   type: 'SET_ROOTNOTE',
   rootNote: rootNote
@@ -34,22 +30,13 @@ export const setMasterGain = (masterGain) => ({
   masterGain: masterGain
 })
 
-export const nextStep = () => (dispatch) => {
-  if (currStep > totalSteps - 2){
-         currStep = 0
-      } else {
-         currStep = currStep + 1
-       }
-      dispatch(setCurrentStep(currStep))
-}
-
 export const play = () => ({
   type: 'PLAY',
   playing: true
 })
 
 export const pause = () => (dispatch) => {
-  currStep = 0
+  console.log("blah")
   dispatch({
     type: 'PAUSE',
     playing: false

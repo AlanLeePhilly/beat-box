@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
+import _ from 'lodash'
+
 import SequencerContainer from './SequencerContainer'
 import SynthfulContainer from './SynthfulContainer'
 import SamplerContainer from './SamplerContainer'
@@ -20,12 +22,9 @@ class Dashboard extends React.Component {
     
     this.handleChange = this.handleChange.bind(this)
   }
+  
   handleChange(device){
     this.props.setDevice(device)
-  }
-  
-  UNSAFE_componentWillReceiveProps(nextProps){
-    debugger
   }
 
   render(){
@@ -59,7 +58,7 @@ class Dashboard extends React.Component {
         </div>
         
         <SeqGrid
-          pattern={this.props.pattern}
+          pattern={_.cloneDeep(this.props.pattern)}
           currentStep={this.props.currentStep}
           setPattern={this.props.setPattern}
           displayNames={displayNames}

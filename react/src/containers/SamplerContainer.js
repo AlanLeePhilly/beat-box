@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 
 import { DRUMNAMES } from '../constants/Constants'
-import { setMasterGain, nextStep, play, pause } from '../actions/synthAdjust'
+import { nextStep } from '../actions/sequencerAdjust'
 import { setKitName, setDrumNames,setBufferList, setLoaded } from '../actions/samplerAdjust'
 
 import SamMasterGain from '../components/sampler/SamMasterGain'
