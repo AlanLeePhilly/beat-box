@@ -2,7 +2,7 @@ import React from 'react';
 
 const Oscilloscope = props =>{
   var audioContext = props.audioContext
-  var analyser = props.analyser
+  var analyser = props.analyser._analyser
 
 if (document.getElementById('scope')) {
   var scopeCtx = document.getElementById('scope').getContext('2d');
@@ -17,6 +17,7 @@ function draw() {
 }
 
 function drawScope(analyser, ctx) {
+  
   var width = ctx.canvas.width;
   var height = ctx.canvas.height;
   var timeData = new Uint8Array(analyser.frequencyBinCount);

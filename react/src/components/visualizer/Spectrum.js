@@ -7,7 +7,7 @@ const Spectrum = props =>{
     draw();
   }
   function draw() {
-    drawSpectrum(props.analyser, spectCtx);
+    drawSpectrum(props.analyser._analyser, spectCtx);
     requestAnimationFrame(draw);
   }
 

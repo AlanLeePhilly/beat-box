@@ -21,10 +21,11 @@ class SynthfulContainer extends React.Component {
       subPattern: new Array(8)
     };
     Tone.Transport.start("+0.1");
-    Tone.Transport.bpm.value = this.props.bpm;
-    this.synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
+    Tone.Transport.bpm.value = this.props.bpm * 2;
+    this.analyser = new Tone.Analyser().toMaster()
+    this.synth = new Tone.PolySynth(6, Tone.Synth).connect(this.analyser);
     this.tonePattern = new Tone.Pattern((time, note) => {
-      this.synth.triggerAttackRelease(note, "4n", time);
+      this.synth.triggerAttackRelease(note, "8n", time);
       this.props.nextStep();
     }, this.state.subPattern, "up");
     // Tone.Transport.loop = true;
@@ -73,6 +74,11 @@ class SynthfulContainer extends React.Component {
   }
   
   render() {
+    this.synth.set({
+      oscillator: {
+        type: this.props.waveType
+      }
+    })
     let selectedVisualizers = [];
     if (this.props.seeSpectrum && this.analyser){
       selectedVisualizers.push(
@@ -96,7 +102,6 @@ class SynthfulContainer extends React.Component {
         </div>
       );
     };
-    
     return(
       <div className="column medium-12 end">
         <div className="column medium-9 end">
