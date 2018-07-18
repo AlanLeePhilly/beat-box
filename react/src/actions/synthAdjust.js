@@ -30,6 +30,26 @@ export const setMasterGain = (masterGain) => ({
   masterGain: masterGain
 })
 
+export const setAttack = (attack) => ({
+  type: 'SET_ATTACK',
+  attack: attack
+})
+
+export const setDecay = (decay) => ({
+  type: 'SET_DECAY',
+  decay: decay
+})
+
+export const setSustain = (sustain) => ({
+  type: 'SET_SUSTAIN',
+  sustain: sustain
+})
+
+export const setRelease = (release) => ({
+  type: 'SET_RELEASE',
+  release: release
+})
+
 export const play = () => ({
   type: 'PLAY',
   playing: true

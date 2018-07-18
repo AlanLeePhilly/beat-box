@@ -3,14 +3,16 @@ import { connect } from 'react-redux'
 import Tone from 'tone';
 import _ from 'lodash';
 import { NOTEFREQS, ROOTNOTES, SCALESTEPS } from '../constants/Constants';
-import { setRootNote, setOctave, setScale, setWaveType, setMasterGain, play, pause } from '../actions/synthAdjust';
-import { setNoteNames, nextStep } from '../actions/sequencerAdjust';
+import { setRootNote, setOctave, setScale, setWaveType, setAttack, setRelease, setMasterGain, play, pause } from '../actions/synthAdjust';
+import { setNoteNames, nextStep, setBpm } from '../actions/sequencerAdjust';
 import SynOctave from '../components/synth/SynOctave';
+import SynEnvelope from '../components/synth/SynEnvelope';
 import SynRootNote from '../components/synth/SynRootNote';
 import SynScale from '../components/synth/SynScale';
 import SynWaveType from '../components/synth/SynWaveType';
 import SynMasterGain from '../components/synth/SynMasterGain';
 import SynPlay from '../components/synth/SynPlay';
+import SeqBpm from '../components/sequencer/SeqBpm';
 import Oscilloscope from '../components/visualizer/Oscilloscope';
 import Spectrum from '../components/visualizer/Spectrum';
 
@@ -18,14 +20,14 @@ class SynthfulContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      subPattern: new Array(8)
+      subPattern: new Array(8),
+      
     };
     Tone.Transport.start("+0.1");
-    Tone.Transport.bpm.value = this.props.bpm * 2;
     this.analyser = new Tone.Analyser().toMaster()
     this.synth = new Tone.PolySynth(6, Tone.Synth).connect(this.analyser);
     this.tonePattern = new Tone.Pattern((time, note) => {
-      this.synth.triggerAttackRelease(note, "8n", time);
+      this.synth.triggerAttackRelease(note, .05, time);
       this.props.nextStep();
     }, this.state.subPattern, "up");
     // Tone.Transport.loop = true;
@@ -74,9 +76,16 @@ class SynthfulContainer extends React.Component {
   }
   
   render() {
+    Tone.Transport.bpm.value = this.props.bpm * 2;
+
     this.synth.set({
       oscillator: {
         type: this.props.waveType
+      },
+      envelope: {
+        attack: this.props.attack,
+        release: this.props.release
+        
       }
     })
     let selectedVisualizers = [];
@@ -104,9 +113,9 @@ class SynthfulContainer extends React.Component {
     };
     return(
       <div className="column medium-12 end">
-        <div className="column medium-9 end">
-          Synthesizer:
-          <div className='synth-buttons medium-12 btn-box buttons'>
+        <div className="synth-row column medium-10">
+          <div className="column medium-12">Synthesizer:</div>
+          <div className='synth-buttons medium-12 btn-box buttons row'>
             <SynPlay
               play={this.onPlay}
               isPlaying={this.props.playing}
@@ -135,7 +144,18 @@ class SynthfulContainer extends React.Component {
               masterGain={this.props.masterGain}
               setMasterGain={this.props.setMasterGain}
             />
+            
+            <SeqBpm
+              setBpm={this.props.setBpm}
+              bpm={this.props.bpm}
+            />
           </div>
+          {/* <SynEnvelope 
+            attack={this.props.attack}
+            setAttack={this.props.setAttack}
+            release={this.props.release}
+            setRelease={this.props.setRelease}
+          /> */}
         </div>
         <div className='visualizers'>
           {selectedVisualizers}
@@ -152,6 +172,9 @@ const mapDispatchToProps = (dispatch) => {
     setScale: (scale) => dispatch(setScale(scale)),
     setWaveType: (waveType) => dispatch(setWaveType(waveType)),
     setMasterGain: (masterGain) => dispatch(setMasterGain(masterGain)),
+    setAttack: (attack) => dispatch(setAttack(attack)),
+    setRelease: (release) => dispatch(setRelease(release)),
+    setBpm: (bpm) => dispatch(setBpm(bpm)),
     nextStep: () => dispatch(nextStep()),
     play: () => dispatch(play()),
     pause: () => dispatch(pause())
@@ -164,13 +187,14 @@ const mapStateToProps = (state) => {
     playing: state.sequencer.playing,
     currentStep: state.sequencer.currentStep,
     noteNames: state.synth.noteNames,
-    release: state.sequencer.release,
     noteFreqs: state.synth.noteFreqs,
-    waveType: state.synth.waveType,
     masterGain: state.synth.masterGain,
     rootNote: state.synth.rootNote,
     octave: state.synth.octave,
     scale: state.synth.scale,
+    waveType: state.synth.waveType,
+    attack: state.synth.attack,
+    release: state.synth.release,
     bpm: state.sequencer.bpm,
     seeSpectrum: state.visualizer.seeSpectrum,
     seeOscilloscope: state.visualizer.seeOscilloscope

@@ -63,16 +63,16 @@ class Dashboard extends React.Component {
           setPattern={this.props.setPattern}
           displayNames={displayNames}
         />
-        <div className=' gutter-small row'>
-          <div className="column medium-4 small-12">
-              Device:
-              <DeviceToggle 
+        <div className='flex-center gutter-small row'>
+          {/* <div className="column medium-4 small-12">
+              BPM:
+              <SetBPM 
                 device={this.props.device}
                 handler={this.handleChange}
               />
-          </div>
+          </div> */}
           
-          <div className="column medium-4 small-12">
+          <div className="column medium-5 small-12">
             Grid:
             <SequencerContainer />
           </div>
@@ -87,7 +87,7 @@ class Dashboard extends React.Component {
             />
           </div>
         </div>
-        <div className=' gutter-small row'>
+        <div className='flex-center gutter-small row'>
           {selectedDevice}
         </div>
       </div>

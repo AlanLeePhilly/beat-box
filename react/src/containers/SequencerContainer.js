@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { connect } from 'react-redux'
 import { setBpm, setCurrentStep, setSteps, setNoteNames, setRelease, setDevice, setPattern, fetchPatterns} from '../actions/sequencerAdjust'
 import SeqPlay from '../components/sequencer/SeqPlay';
-import SeqBpm from '../components/sequencer/SeqBpm';
 import SeqRelease from '../components/sequencer/SeqRelease';
 import SeqClear from '../components/sequencer/SeqClear';
 import SeqGrid from '../components/sequencer/SeqGrid';
@@ -48,11 +47,8 @@ class SequencerContainer extends React.Component {
 
   render(){
     return (
-      <div className="seq-button btn-box buttons">
-        {/* <SeqBpm
-          setBpm={this.props.setBpm}
-          bpm={this.props.bpm}
-        /> */}
+      <div className="seq-buttons btn-box buttons">
+
 
         {/* <SeqRelease
           setRelease={this.props.setRelease}
