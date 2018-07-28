@@ -72,12 +72,12 @@ class Dashboard extends React.Component {
               />
           </div> */}
           
-          <div className="column medium-5 small-12">
+          <div className="column medium-4 medium-centered small-12">
             Grid:
             <SequencerContainer />
           </div>
           
-          <div className="column medium-4 small-12">
+          <div className="column medium-4 medium-centered small-12">
             Visualizers:
             <VisualizerSwitches 
               seeOscilloscope={this.props.seeOscilloscope}
