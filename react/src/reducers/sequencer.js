@@ -19,9 +19,9 @@ const initialState =
     loading: false,
     playing: false,
     steps: 8,
-    currentStep: 0,
+    currentStep: null,
     noteNames: ['X', 'X', 'X', 'F', 'G', 'A', 'B', 'C'],
-    bpm: 200,
+    bpm: 120,
     release: 100,
     device: 'synth',
     error: null
@@ -35,8 +35,7 @@ export default function sequencer(state = initialState, action) {
       })
     case 'PAUSE':
       return Object.assign({}, state, {   
-        playing: action.playing, 
-        currentStep: 0 
+        playing: action.playing
       })
     case 'SET_PATTERN':{
       return Object.assign({}, state, {   

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 
 import { DRUMNAMES } from '../constants/Constants'
-import { setMasterGain, nextStep, play, pause } from '../actions/synthAdjust'
+import { nextStep } from '../actions/sequencerAdjust'
 import { setKitName, setDrumNames,setBufferList, setLoaded } from '../actions/samplerAdjust'
 
 import SamMasterGain from '../components/sampler/SamMasterGain'
@@ -20,6 +20,8 @@ class SamplerContainer extends React.Component {
     let analyser
     this.state = {
       interval: null,
+      scheduleAheadTime: 0.1,
+      nextNoteTime: 0.0,
       bufferList: []
     }
     this.onPlay = this.onPlay.bind(this)
@@ -27,6 +29,9 @@ class SamplerContainer extends React.Component {
     this.makeSound = this.makeSound.bind(this)
     this.loadSamples = this.loadSamples.bind(this)
     this.setBufferList = this.setBufferList.bind(this)
+    this.scheduler = this.scheduler.bind(this)
+    this.nextNote = this.nextNote.bind(this)
+    
   }
 
   componentDidMount(){
@@ -56,13 +61,10 @@ class SamplerContainer extends React.Component {
       this.props.pause()
     } else {
       this.props.play()
-      this.makeSound()
+      this.setState({ nextNoteTime: this.props.ctx.currentTime + 0.1 })
       this.interval = setInterval(() => {
-        this.props.nextStep()
-        // var next = this.this.props.data.pattern[this.this.props.data.currentStep]
-        // var seqData = this.this.props.data
-        this.makeSound();
-      }, ((60 * 500) / this.props.bpm));
+        this.scheduler()
+      }, 50)
     }
   }
 
@@ -84,8 +86,32 @@ class SamplerContainer extends React.Component {
     this.props.setLoaded(true)
     this.setDrumNames()
   }
+  
+  scheduler() {
+      // while there are notes that will need to play before the next interval, 
+      // schedule them and advance the pointer.
+      let counter = 1;
+      let diff;
+      while (this.state.nextNoteTime < this.props.ctx.currentTime + this.state.scheduleAheadTime ) {
+          this.makeSound(this.state.nextNoteTime)
+          diff = this.state.nextNoteTime - this.props.ctx.currentTime
+          console.log("step: " + this.props.currentStep + " count: " + counter + " diff: " + diff )
+          this.nextNote()
+          counter++
+      }
+  }
+  
+  nextNote() {
+      // Advance current note and time by a 16th note...
+      let secondsPerBeat = 60.0 / this.props.bpm * 2;    // Notice this picks up the CURRENT 
+                                            // tempo value to calculate beat length.
+      let newNextNoteTime = this.state.nextNoteTime + 0.5 * secondsPerBeat
+      this.props.nextStep();
+      this.setState({ nextNoteTime: newNextNoteTime })
+      
+  }
 
-  makeSound() {
+  makeSound(time) {
     let stepPattern = this.props.pattern.grid[this.props.currentStep]
     let bufferList = this.state.bufferList.map((freq, i) =>
       stepPattern[i] === 1 ? freq : null
@@ -96,7 +122,8 @@ class SamplerContainer extends React.Component {
     for (var i=0; i < bufferList.length; i++) {
       sourceArr[i] = this.props.ctx.createBufferSource();
       sourceArr[i].buffer = bufferList[i]
-      sourceArr[i].start(0);
+      sourceArr[i].start(time);
+      // sourceArr[i].stop(time + 0.1)
       gainArr[i] = this.props.ctx.createGain()
       gainArr[i].gain.value = 1;
       sourceArr[i].connect(gainArr[i]);

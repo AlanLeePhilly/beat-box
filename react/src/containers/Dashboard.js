@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
+import _ from 'lodash'
+
 import SequencerContainer from './SequencerContainer'
 import SynthfulContainer from './SynthfulContainer'
 import SamplerContainer from './SamplerContainer'
@@ -20,12 +22,9 @@ class Dashboard extends React.Component {
     
     this.handleChange = this.handleChange.bind(this)
   }
+  
   handleChange(device){
     this.props.setDevice(device)
-  }
-  
-  UNSAFE_componentWillReceiveProps(nextProps){
-    debugger
   }
 
   render(){
@@ -59,26 +58,26 @@ class Dashboard extends React.Component {
         </div>
         
         <SeqGrid
-          pattern={this.props.pattern}
+          pattern={_.cloneDeep(this.props.pattern)}
           currentStep={this.props.currentStep}
           setPattern={this.props.setPattern}
           displayNames={displayNames}
         />
-        <div className=' gutter-small row'>
-          <div className="column medium-4 small-12">
-              Device:
-              <DeviceToggle 
+        <div className='flex-center gutter-small row'>
+          {/* <div className="column medium-4 small-12">
+              BPM:
+              <SetBPM 
                 device={this.props.device}
                 handler={this.handleChange}
               />
-          </div>
+          </div> */}
           
-          <div className="column medium-4 small-12">
+          <div className="column medium-4 medium-centered small-12">
             Grid:
             <SequencerContainer />
           </div>
           
-          <div className="column medium-4 small-12">
+          <div className="column medium-4 medium-centered small-12">
             Visualizers:
             <VisualizerSwitches 
               seeOscilloscope={this.props.seeOscilloscope}
@@ -88,7 +87,7 @@ class Dashboard extends React.Component {
             />
           </div>
         </div>
-        <div className=' gutter-small row'>
+        <div className='flex-center gutter-small row'>
           {selectedDevice}
         </div>
       </div>

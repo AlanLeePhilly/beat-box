@@ -176,6 +176,9 @@ body {
   to   { background: hsla(100%, 100%, 50%, 1) }
 }
 
+.env-range{
+  
+}
 
 footer {
   margin-top: 2em;
@@ -208,7 +211,16 @@ footer {
 }
 
 .synth-buttons{
+  margin-top: 20px;
   padding-bottom: 10px;
+}
+.synth-row{
+  padding-right: 0;
+  padding-left: 28px;
+}
+.flex-center{
+  display: flex;
+  justify-content: center;
 }
 $grid-column-gutter: (
   small: 20px,

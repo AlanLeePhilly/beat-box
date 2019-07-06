@@ -2,7 +2,7 @@ import React from 'react';
 
 const Oscilloscope = props =>{
   var audioContext = props.audioContext
-  var analyser = props.analyser
+  var analyser = props.analyser._analyser
 
 if (document.getElementById('scope')) {
   var scopeCtx = document.getElementById('scope').getContext('2d');
@@ -17,12 +17,13 @@ function draw() {
 }
 
 function drawScope(analyser, ctx) {
+  
   var width = ctx.canvas.width;
   var height = ctx.canvas.height;
   var timeData = new Uint8Array(analyser.frequencyBinCount);
   var scaling = height / 256;
   var risingEdge = 0;
-  var edgeThreshold = 5;
+  var edgeThreshold = 0;
 
   analyser.getByteTimeDomainData(timeData);
 
@@ -36,12 +37,12 @@ function drawScope(analyser, ctx) {
   // No buffer overrun protection
   while (timeData[risingEdge++] - 128 > 0 && risingEdge <= width);
   if (risingEdge >= width) risingEdge = 0;
-
+  
   while (timeData[risingEdge++] - 128 < edgeThreshold && risingEdge <= width);
   if (risingEdge >= width) risingEdge = 0;
-
+  
   for (var x = risingEdge; x < timeData.length && x - risingEdge < width; x++)
-  ctx.lineTo(x - risingEdge, height - timeData[x] * scaling);
+  ctx.lineTo(x - risingEdge, height - timeData[x] * scaling);  
 
   ctx.stroke();
 }

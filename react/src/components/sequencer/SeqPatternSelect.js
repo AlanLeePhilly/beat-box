@@ -3,7 +3,7 @@ import { KITNAMES } from '../../constants/Constants'
 
 const SeqPatternSelect = props =>{
   let patternOptions = props.patterns.map((p, i) => <option key={i}>{p.name}</option>)
-  patternOptions.unshift(<option disabled  key="99">Preset Patterns</option>)
+  patternOptions.unshift(<option disabled  key="99">Presets</option>)
   return(
     <div className="button-wrapper">
       <select

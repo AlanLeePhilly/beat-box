@@ -1,121 +1,121 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {NOTEFREQS, ROOTNOTES, SCALESTEPS} from '../constants/Constants'
-import { setRootNote, setOctave, setScale, setWaveType, setMasterGain, nextStep, play, pause } from '../actions/synthAdjust'
-import {setNoteNames} from '../actions/sequencerAdjust'
-import SynOctave from '../components/synth/SynOctave'
-import SynRootNote from '../components/synth/SynRootNote'
-import SynScale from '../components/synth/SynScale'
-import SynWaveType from '../components/synth/SynWaveType'
-import SynMasterGain from '../components/synth/SynMasterGain'
-import SynPlay from '../components/synth/SynPlay'
-import Oscilloscope from '../components/visualizer/Oscilloscope'
-import Spectrum from '../components/visualizer/Spectrum'
+import Tone from 'tone';
+import _ from 'lodash';
+import { NOTEFREQS, ROOTNOTES, SCALESTEPS } from '../constants/Constants';
+import { setRootNote, setOctave, setScale, setWaveType, setAttack, setRelease, setMasterGain, play, pause } from '../actions/synthAdjust';
+import { setNoteNames, nextStep, setBpm } from '../actions/sequencerAdjust';
+import SynOctave from '../components/synth/SynOctave';
+import SynEnvelope from '../components/synth/SynEnvelope';
+import SynRootNote from '../components/synth/SynRootNote';
+import SynScale from '../components/synth/SynScale';
+import SynWaveType from '../components/synth/SynWaveType';
+import SynMasterGain from '../components/synth/SynMasterGain';
+import SynPlay from '../components/synth/SynPlay';
+import SeqBpm from '../components/sequencer/SeqBpm';
+import Oscilloscope from '../components/visualizer/Oscilloscope';
+import Spectrum from '../components/visualizer/Spectrum';
 
 class SynthfulContainer extends React.Component {
   constructor(props) {
     super(props);
-    let analyser
     this.state = {
-      interval: null
-    }
-    this.onPlay = this.onPlay.bind(this)
-    this.makeSound = this.makeSound.bind(this)
-    this.pause = this.pause.bind(this)
-  }
-
-  componentDidMount(){
-  }
+      subPattern: new Array(8),
+      
+    };
+    Tone.Transport.start("+0.1");
+    this.analyser = new Tone.Analyser().toMaster()
+    this.synth = new Tone.PolySynth(6, Tone.Synth).connect(this.analyser);
+    this.tonePattern = new Tone.Pattern((time, note) => {
+      this.synth.triggerAttackRelease(note, .05, time);
+      this.props.nextStep();
+    }, this.state.subPattern, "up");
+    // Tone.Transport.loop = true;
+    this.patternMaker = this.patternMaker.bind(this);
+    this.onPlay = this.onPlay.bind(this);  
+  };
   
   componentWillUnmount(){
-    this.pause()
-  }
-
-
-
+    this.props.pause();
+  };
+  
+  componentDidUpdate(prevProps){
+    if(prevProps.noteNames != this.props.noteNames || !_.isEqual(prevProps.pattern.grid, this.props.pattern.grid)){
+      this.patternMaker();
+    };
+  };
+  
   onPlay(){
     if (this.props.playing){
-      this.pause()
+      this.props.pause();
+      this.tonePattern.stop();
     } else {
-      this.props.play()
-      this.makeSound()
-      this.interval = setInterval(() => {
-        this.props.nextStep()
-        this.makeSound();
-      }, ((60 * 500) / this.props.bpm));
-    }
-  }
-
-  pause(){
-    clearInterval(this.interval)
-    this.props.pause()
-  }
-
-  makeSound(){
-    let stepPattern = this.props.pattern.grid[this.props.currentStep]
-    let freqArr = this.props.noteFreqs.map((freq, i) =>
-      stepPattern[i] === 1 ? freq : null
-    ).filter(x => x)
-    let voiceCount = freqArr.length
-    let masterGain = this.props.ctx.createGain()
-    let oscArr = []
-    let gainArr = []
-    for (var i=0; i < voiceCount; i++) {
-      oscArr[i] = this.props.ctx.createOscillator()
-      oscArr[i].type = this.props.waveType.toLowerCase();
-      oscArr[i].frequency.value = freqArr[i];
-      oscArr[i].start(0);
-      gainArr[i] = this.props.ctx.createGain()
-      gainArr[i].gain.value = 1;
-
-      oscArr[i].connect(gainArr[i]);
-      gainArr[i].connect(masterGain);
-    }
-    this.analyser = this.props.ctx.createAnalyser()
-    this.analyser.fftSize = 4096;
-    
-    masterGain.connect(this.analyser)
-    this.analyser.connect(this.props.ctx.destination)
-    
-    masterGain.gain.value = this.props.masterGain
-
-    setTimeout(() => {
-      masterGain.gain.setTargetAtTime(0, this.props.ctx.currentTime, 0.015);
-    }, parseInt(this.props.release));
-  }
-
+      this.patternMaker();
+      this.props.play();
+      this.tonePattern.start(0);
+    };
+  };
   
-
+  patternMaker(){
+    let newPattern = [];
+    this.props.pattern.grid.forEach((step, i) => {
+      let stepNotes = step.map((cell, j) => {
+        let result = (cell == 1) ? this.props.noteNames[j].replace(/\s/g, '') : null
+        return result;
+      }).filter(x => x);
+      
+      if(stepNotes){
+        newPattern.push(stepNotes);
+      } else {
+        newPattern.push(null)
+      };
+    });
+    
+    this.setState({subPattern: newPattern});
+    this.tonePattern.values = newPattern;
+  }
+  
   render() {
-    let selectedVisualizers = []
+    Tone.Transport.bpm.value = this.props.bpm * 2;
+
+    this.synth.set({
+      oscillator: {
+        type: this.props.waveType
+      },
+      envelope: {
+        attack: this.props.attack,
+        release: this.props.release
+        
+      }
+    })
+    let selectedVisualizers = [];
     if (this.props.seeSpectrum && this.analyser){
       selectedVisualizers.push(
-        <div className='spectrum column medium-6'>
+        <div className='spectrum column medium-6' key='spec'>
           <canvas id='spectrum' className='specs'></canvas>
           <Spectrum
             audioContext={this.props.ctx}
             analyser={this.analyser}
           />
         </div>
-      )
-    }
+      );
+    };
     if (this.props.seeOscilloscope && this.analyser){
       selectedVisualizers.push(
-        <div className='oscilloscope column medium-6'>
+        <div className='oscilloscope column medium-6' key='scope'>
           <canvas id='scope' className='specs'></canvas>
           <Oscilloscope
             audioContext={this.props.ctx}
             analyser={this.analyser}
           />
         </div>
-      )
-    }
-    
+      );
+    };
     return(
       <div className="column medium-12 end">
-        <div className="column medium-9 end">
-          Synthesizer:
-          <div className='synth-buttons medium-12 btn-box buttons'>
+        <div className="synth-row column medium-centered medium-10">
+          <div className="column medium-12" style={{paddingRight: '40px'}}>Synthesizer:</div>
+          <div className='synth-buttons medium-12 btn-box buttons row'>
             <SynPlay
               play={this.onPlay}
               isPlaying={this.props.playing}
@@ -123,40 +123,47 @@ class SynthfulContainer extends React.Component {
             <SynRootNote
               rootNote={this.props.rootNote}
               setRootNote={this.props.setRootNote}
-              pause={this.pause}
             />
 
             <SynOctave
               octave={this.props.octave}
               setOctave={this.props.setOctave}
-              pause={this.pause}
             />
 
             <SynScale
               scale={this.props.scale}
               setScale={this.props.setScale}
-              pause={this.pause}
             />
 
             <SynWaveType
               waveType={this.props.waveType}
               setWaveType={this.props.setWaveType}
-              pause={this.pause}
             />
 
             <SynMasterGain
               masterGain={this.props.masterGain}
               setMasterGain={this.props.setMasterGain}
             />
+            
+            <SeqBpm
+              setBpm={this.props.setBpm}
+              bpm={this.props.bpm}
+            />
           </div>
+          {/* <SynEnvelope 
+            attack={this.props.attack}
+            setAttack={this.props.setAttack}
+            release={this.props.release}
+            setRelease={this.props.setRelease}
+          /> */}
         </div>
         <div className='visualizers'>
           {selectedVisualizers}
         </div>
       </div>
-    )
-  }
-}
+    );
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -165,29 +172,34 @@ const mapDispatchToProps = (dispatch) => {
     setScale: (scale) => dispatch(setScale(scale)),
     setWaveType: (waveType) => dispatch(setWaveType(waveType)),
     setMasterGain: (masterGain) => dispatch(setMasterGain(masterGain)),
+    setAttack: (attack) => dispatch(setAttack(attack)),
+    setRelease: (release) => dispatch(setRelease(release)),
+    setBpm: (bpm) => dispatch(setBpm(bpm)),
     nextStep: () => dispatch(nextStep()),
     play: () => dispatch(play()),
     pause: () => dispatch(pause())
-  }
-}
+  };
+};
 
 const mapStateToProps = (state) => {
   return {
     pattern: state.sequencer.pattern,
     playing: state.sequencer.playing,
     currentStep: state.sequencer.currentStep,
-    release: state.sequencer.release,
+    noteNames: state.synth.noteNames,
     noteFreqs: state.synth.noteFreqs,
-    waveType: state.synth.waveType,
     masterGain: state.synth.masterGain,
     rootNote: state.synth.rootNote,
     octave: state.synth.octave,
     scale: state.synth.scale,
+    waveType: state.synth.waveType,
+    attack: state.synth.attack,
+    release: state.synth.release,
     bpm: state.sequencer.bpm,
     seeSpectrum: state.visualizer.seeSpectrum,
     seeOscilloscope: state.visualizer.seeOscilloscope
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SynthfulContainer);
 
